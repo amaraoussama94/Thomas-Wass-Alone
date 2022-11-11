@@ -1,6 +1,6 @@
 #main app
-Thomas:   Engine.o TextureHolder.o  Input.o Update.o Draw.o Main.o PlayableCharacter.o  Thomas.o  Bob.o  LevelManager.o loadLevel.o
-	g++ Engine.o TextureHolder.o  Input.o  Update.o Draw.o  Main.o  PlayableCharacter.o  Thomas.o  Bob.o  LevelManager.o  loadLevel.o -o Thomas -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system  
+Thomas:   Engine.o TextureHolder.o  Input.o Update.o Draw.o Main.o PlayableCharacter.o  Thomas.o  Bob.o  LevelManager.o LoadLevel.o
+	g++ Engine.o TextureHolder.o  Input.o  Update.o Draw.o  Main.o  PlayableCharacter.o  Thomas.o  Bob.o  LevelManager.o  LoadLevel.o -o Thomas -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system  
 
 
 Engine.o:Engine.cpp
@@ -48,8 +48,8 @@ LevelManager.o:LevelManager.cpp
 	g++ -c LevelManager.cpp
 
  
-loadLevel.o:loadLevel.cpp  
-	g++ -c loadLevel.cpp
+LoadLevel.o:LoadLevel.cpp  
+	g++ -c LoadLevel.cpp
 
 
 
