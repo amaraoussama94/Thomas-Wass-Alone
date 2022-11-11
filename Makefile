@@ -1,6 +1,6 @@
 #main app
 Thomas:   Engine.o TextureHolder.o  Input.o Update.o Draw.o Main.o
-	g++ Engine.o TextureHolder.o  Input.o  Update.o Draw.o  Main.o-o Thomas -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system  
+	g++ Engine.o TextureHolder.o  Input.o  Update.o Draw.o  Main.o -o Thomas -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system  
 
 
 Engine.o:Engine.cpp
