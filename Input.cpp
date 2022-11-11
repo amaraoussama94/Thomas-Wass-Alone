@@ -18,7 +18,7 @@
                 m_Playing = true;
             }
             // Switch between Thomas and Bob
-            if (Keyboard::isKeyPressed(Keyboard::A))
+            if (Keyboard::isKeyPressed(Keyboard::Q))
             {
                 m_Character1 = !m_Character1;
             }
