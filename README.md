@@ -34,5 +34,5 @@ so that the shorter, lower-jumping Bob will need to stand on his friend's (Thoma
 
 <h3 align="left">Structuring the Thomas Was Late Engine  code:</h3>   
 <p align="center">
-    <img src="https://github.com/amaraoussama94/Thomas-Wass-Alone/blob/main/UML%20Engine.png" width="250" height="250"/ >  
+    <img src="https://github.com/amaraoussama94/Thomas-Wass-Alone/blob/main/UML%20Engine.png" width="400" height="400"/ >  
 </p>
