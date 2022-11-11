@@ -1,6 +1,6 @@
 #main app
-Thomas:   Engine.o TextureHolder.o  Input.o Update.o Draw.o Main.o
-	g++ Engine.o TextureHolder.o  Input.o  Update.o Draw.o  Main.o -o Thomas -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system  
+Thomas:   Engine.o TextureHolder.o  Input.o Update.o Draw.o Main.o PlayableCharacter.o
+	g++ Engine.o TextureHolder.o  Input.o  Update.o Draw.o  Main.o  PlayableCharacter.o  -o Thomas -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system  
 
 
 Engine.o:Engine.cpp
@@ -27,6 +27,11 @@ TextureHolder.o:TextureHolder.cpp
 #Main Function
 Main.o:Main.cpp  
 	g++ -c Main.cpp
+
+
+#Playable Character  class
+PlayableCharacter.o:PlayableCharacter.cpp  
+	g++ -c PlayableCharacter.cpp
 
 clean:
 #cleanup all object file
