@@ -9,10 +9,10 @@ class Engine
 private:
     // The texture holder
     TextureHolder th;
-    const int TILE_SIZE = 50;
+    const int TILE_SIZE = 50;//each tile in the sprite-sheet is 50 pixels wide and 50 pixels high
     const int VERTS_IN_QUAD = 4;
     // The force pushing the characters down
-    const int GRAVITY = 300;
+    const int GRAVITY = 300;//number of pixels by which the game characters will be pushed downward each secon
     // A regular RenderWindow
     RenderWindow m_Window;
     // The main Views
@@ -31,7 +31,7 @@ private:
     // Is the game currently playing?
     bool m_Playing = false;
     // Is character 1 or 2 the current focus?
-    bool m_Character1 = true;
+    bool m_Character1 = true;//Initially, it is initialized to true, to center on Thomas
     // Start in full screen (not split) mode
     bool m_SplitScreen = false;
     // Time left in the current level (seconds)
