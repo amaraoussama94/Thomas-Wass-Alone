@@ -45,5 +45,5 @@ bool Thomas::handleInput()
     {
         m_RightPressed = false;
     }
-    return m_JustJumped;
+    return m_JustJumped;//This will let the calling code know if it needs to play a jumping sound effec
 }

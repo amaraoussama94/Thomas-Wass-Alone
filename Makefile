@@ -1,6 +1,6 @@
 #main app
-Thomas:   Engine.o TextureHolder.o  Input.o Update.o Draw.o Main.o PlayableCharacter.o
-	g++ Engine.o TextureHolder.o  Input.o  Update.o Draw.o  Main.o  PlayableCharacter.o  -o Thomas -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system  
+Thomas:   Engine.o TextureHolder.o  Input.o Update.o Draw.o Main.o PlayableCharacter.o  Thomas.o
+	g++ Engine.o TextureHolder.o  Input.o  Update.o Draw.o  Main.o  PlayableCharacter.o  Thomas.o -o Thomas -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system  
 
 
 Engine.o:Engine.cpp
@@ -29,10 +29,18 @@ Main.o:Main.cpp
 	g++ -c Main.cpp
 
 
+#Thomas class
+Thomas.o:Thomas.cpp  
+	g++ -c Thomas.cpp
+
 #Playable Character  class
 PlayableCharacter.o:PlayableCharacter.cpp  
 	g++ -c PlayableCharacter.cpp
 
+
 clean:
 #cleanup all object file
 	  -rm *.o $(objects) 
+
+
+	  Thomas
