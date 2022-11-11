@@ -16,7 +16,7 @@ install make :-sudo apt-get install  make</br>
 *Game control :
 escape to close  game</br>
 E :Split game  </br>
-A: for  </br>
+A and D for Thomas, and the Left and Right arrow keys for Bob, </br>
 Enter to pause and start game </br>
 
 *Game name:   thomas was alone</br>
