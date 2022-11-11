@@ -1,19 +1,15 @@
 #main app
-Thomas:   ZombieArena.o CreateBackground.o  
-	g++ ZombieArena.o CreateBackground.o   -o Thomas -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system  
+Thomas:   Engine.o TextureHolder.o  
+	g++ Engine.o TextureHolder.o   -o Thomas -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system  
 
 
-ZombieArena.o:ZombieArena.cpp
-	g++ -c ZombieArena.cpp
+Engine.o:Engine.cpp
+	g++ -c Engine.cpp
 
- 
-#Player class 
-Player.o:Player.cpp
-	g++ -c Player.cpp
 
-#Backgroung function
-CreateBackground.o:CreateBackground.cpp  
-	g++ -c CreateBackground.cpp
+#Texture Holder
+TextureHolder.o:TextureHolder.cpp  
+	g++ -c TextureHolder.cpp
  
  
 
