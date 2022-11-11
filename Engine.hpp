@@ -1,6 +1,9 @@
- #pragma once
+#pragma once
 #include <SFML/Graphics.hpp>
 #include "TextureHolder.hpp"
+
+#include "Thomas.hpp"
+#include "Bob.hpp"
 
 using namespace sf;
 
@@ -9,6 +12,9 @@ class Engine
 private:
     // The texture holder
     TextureHolder th;
+    // Thomas and his friend, Bob
+    Thomas m_Thomas;
+    Bob m_Bob;
     const int TILE_SIZE = 50;//each tile in the sprite-sheet is 50 pixels wide and 50 pixels high
     const int VERTS_IN_QUAD = 4;
     // The force pushing the characters down
