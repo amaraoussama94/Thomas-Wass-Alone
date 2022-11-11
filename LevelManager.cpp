@@ -81,7 +81,7 @@ int** LevelManager::nextLevel(VertexArray& rVaLevel)
     m_LevelSize.y * VERTS_IN_QUAD);
     // Start at the beginning of the vertex array
     int currentVertex = 0;
-    for (int x = 0; x < m_LevelSize.x; x++)
+    for (int x = 0; x < m_LevelSize.x; x++)//width and height of the level
     {
         for (int y = 0; y < m_LevelSize.y; y++)
         {
