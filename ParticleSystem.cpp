@@ -36,7 +36,7 @@ void ParticleSystem::update(float dt)
         m_IsRunning = false;
     }
 }
-
+//This is the function we will call to start the particle system
 void ParticleSystem::emitParticles(Vector2f startPosition)
 {
     m_IsRunning = true;
@@ -47,4 +47,14 @@ void ParticleSystem::emitParticles(Vector2f startPosition)
         m_Vertices[currentVertex++].color = Color::Yellow;
         it->setPosition(startPosition);
     }
+}
+
+void ParticleSystem::draw(RenderTarget& target,RenderStates states) const
+{
+    target.draw(m_Vertices, states);
+}
+
+bool ParticleSystem::running()
+{
+    return m_IsRunning;
 }
