@@ -1,6 +1,6 @@
 #main app
-Thomas:   Engine.o TextureHolder.o  Input.o Update.o Draw.o Main.o PlayableCharacter.o  Thomas.o  Bob.o  LevelManager.o LoadLevel.o DetectCollisions.o SoundManager.o populateEmitters.o
-	g++ Engine.o TextureHolder.o  Input.o  Update.o Draw.o  Main.o  PlayableCharacter.o  Thomas.o  Bob.o  LevelManager.o  LoadLevel.o DetectCollisions.o SoundManager.o  populateEmitters.o -o Thomas -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system  
+Thomas:   Engine.o TextureHolder.o  Input.o Update.o Draw.o Main.o PlayableCharacter.o  Thomas.o  Bob.o  LevelManager.o LoadLevel.o DetectCollisions.o SoundManager.o populateEmitters.o  HUD.o
+	g++ Engine.o TextureHolder.o  Input.o  Update.o Draw.o  Main.o  PlayableCharacter.o  Thomas.o  Bob.o  LevelManager.o  LoadLevel.o DetectCollisions.o SoundManager.o  populateEmitters.o HUD.o -o Thomas -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system  
 
 
 Engine.o:Engine.cpp
@@ -61,6 +61,11 @@ SoundManager.o:SoundManager.cpp
 
 populateEmitters.o:populateEmitters.cpp  
 	g++ -c populateEmitters.cpp
+
+#HUD class
+HUD.o:HUD.cpp  
+	g++ -c HUD.cpp
+
 clean:
 #cleanup all object file
 	  -rm *.o $(objects) 
