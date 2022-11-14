@@ -5,7 +5,10 @@ using namespace std;
 void Engine::populateEmitters( vector <Vector2f>& vSoundEmitters,int** arrayLevel)
 {
     // Make sure the vector is empty
-    vSoundEmitters.empty();
+     if(!vSoundEmitters.empty()) 
+     {
+        vSoundEmitters.clear();
+     }
     // Keep track of the previous emitter
     // so we don't make too many
     FloatRect previousEmitter;
