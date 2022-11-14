@@ -15,12 +15,17 @@ install make :-sudo apt-get install  make</br>
 <h3 align="left">Generale info: </h3>    
 *Game control :
 escape to close  game</br>
-E :Split game  </br>
-A and D for Thomas, and the Left and Right arrow keys for Bob, </br>
 Enter to pause and start game </br>
+E :Split game  </br>
+Tab: to switch between thomas and bob</br>
+Thomas : Z for Jump </br>
+Q and D for , Left  </br>
+Bob :up Key for Jump 
+Left key and Right   for left and right  </br>
+
 
 *Game name:   thomas was alone</br>
-*version :0.1</br>
+*version :0.8</br>
 
 <h3 align="left">Features of Thomas Was Late:</h3>   
 •A clock that counts down from a time appropriate to the challenge of
