@@ -1,6 +1,6 @@
-<!--<p align="center">
-    <img src="https://github.com/amaraoussama94/Zombie-Shooter/blob/main/game%200.2.png"  >  
-</p>-->
+<p align="center">
+    <img src="https://github.com/amaraoussama94/Thomas-Wass-Alone/blob/main/game_pic.png"  >  
+</p>
 
 <h3 align="left">How to Install : </h3> 
 
