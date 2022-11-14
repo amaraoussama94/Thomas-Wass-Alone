@@ -1,14 +1,21 @@
- #pragma once
-#include <SFML/Graphics.hpp>
-using namespace sf;
-class Particle
+
+#include "Particle.hpp"
+Particle::Particle(Vector2f direction)
 {
-private:
-Vector2f m_Position;
-Vector2f m_Velocity;
-public:
-Particle(Vector2f direction);
-void update(float dt);
-void setPosition(Vector2f position);
-Vector2f getPosition();
-};
+    // Determine the direction
+    m_Velocity.x = direction.x;
+    m_Velocity.y = direction.y;
+}
+void Particle::update(float dtAsSeconds)
+{
+// Move the particle
+    m_Position += m_Velocity * dtAsSeconds;
+}
+void Particle::setPosition(Vector2f position)
+{
+    m_Position = position;
+}
+Vector2f Particle::getPosition()
+{
+    return m_Position;
+}
