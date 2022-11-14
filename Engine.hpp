@@ -4,6 +4,8 @@
 #include "Thomas.hpp"
 #include "Bob.hpp"
 #include "LevelManager.hpp"
+#include "SoundManager.hpp"
+
 
 using namespace sf;
 
@@ -16,6 +18,9 @@ private:
 	// Thomas and his friend, Bob
 	Thomas m_Thomas;
 	Bob m_Bob;
+
+	// Create a SoundManager
+	SoundManager m_SM;
 
 	// A class to manage all the levels
 	LevelManager m_LM;
@@ -82,6 +87,11 @@ private:
 	// Run will call all the private functions
 	bool detectCollisions(PlayableCharacter& character);
 	
+	// Make a vector of the best places to emit sounds from
+	void populateEmitters(vector <Vector2f>& vSoundEmitters,int** arrayLevel);
+	// A vector of Vector2f for the fire emitter locations
+	vector <Vector2f> m_FireEmitters;
+		
 public:
 	// The Engine constructor
 	Engine();
