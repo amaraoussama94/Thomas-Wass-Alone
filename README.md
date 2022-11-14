@@ -19,7 +19,7 @@ Enter to pause and start game </br>
 E :Split game  </br>
 Tab: to switch between thomas and bob</br>
 Thomas : Z for Jump </br>
-Q and D for , Left  </br>
+Q and D for   Left and right  </br>
 Bob :up Key for Jump 
 Left key and Right   for left and right  </br>
 
