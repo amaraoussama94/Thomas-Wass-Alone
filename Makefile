@@ -1,6 +1,6 @@
 #main app
-Thomas:   Engine.o TextureHolder.o  Input.o Update.o Draw.o Main.o PlayableCharacter.o  Thomas.o  Bob.o  LevelManager.o LoadLevel.o DetectCollisions.o SoundManager.o populateEmitters.o  HUD.o
-	g++ Engine.o TextureHolder.o  Input.o  Update.o Draw.o  Main.o  PlayableCharacter.o  Thomas.o  Bob.o  LevelManager.o  LoadLevel.o DetectCollisions.o SoundManager.o  populateEmitters.o HUD.o -o Thomas -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system  
+Thomas:   Engine.o TextureHolder.o  Input.o Update.o Draw.o Main.o PlayableCharacter.o  Thomas.o  Bob.o  LevelManager.o LoadLevel.o DetectCollisions.o SoundManager.o populateEmitters.o  HUD.o Particle.o
+	g++ Engine.o TextureHolder.o  Input.o  Update.o Draw.o  Main.o  PlayableCharacter.o  Thomas.o  Bob.o  LevelManager.o  LoadLevel.o DetectCollisions.o SoundManager.o  populateEmitters.o HUD.o  Particle.o -o Thomas -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system  
 
 
 Engine.o:Engine.cpp
@@ -65,6 +65,10 @@ populateEmitters.o:populateEmitters.cpp
 #HUD class
 HUD.o:HUD.cpp  
 	g++ -c HUD.cpp
+
+#Particle class
+Particle.o:Particle.cpp  
+	g++ -c Particle.cpp
 
 clean:
 #cleanup all object file
