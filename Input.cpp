@@ -22,7 +22,7 @@ void Engine::input()
 			}
 
 			// Switch between Thomas and Bob
-			if (Keyboard::isKeyPressed(Keyboard::Q))
+			if (Keyboard::isKeyPressed(Keyboard::Tab))
 			{
 				m_Character1 = !m_Character1;
 			}
