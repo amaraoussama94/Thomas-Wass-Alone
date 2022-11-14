@@ -39,8 +39,7 @@ SoundManager::SoundManager()
 void SoundManager::playFire(Vector2f emitterLocation, Vector2f listenerLocation)
 {
     // Where is the listener? Thomas.
-    Listener::setPosition(listenerLocation.x,
-    listenerLocation.y, 0.0f);
+    Listener::setPosition(listenerLocation.x,listenerLocation.y, 0.0f);
     switch(m_NextSound)
     {
         case 1:
@@ -79,4 +78,25 @@ void SoundManager::playFire(Vector2f emitterLocation, Vector2f listenerLocation)
     {
         m_NextSound = 1;
     }
+}
+
+void SoundManager::playFallInFire()
+{
+    m_FallInFireSound.setRelativeToListener(true);//play a "normal" sound, sound effect is not spatialized, making the sound effect "normal", not directional
+    m_FallInFireSound.play();
+}
+void SoundManager::playFallInWater()
+{
+    m_FallInWaterSound.setRelativeToListener(true);
+    m_FallInWaterSound.play();
+}
+void SoundManager::playJump()
+{
+    m_JumpSound.setRelativeToListener(true);
+    m_JumpSound.play();
+}
+void SoundManager::playReachGoal()
+{
+    m_ReachGoalSound.setRelativeToListener(true);
+    m_ReachGoalSound.play();
 }
