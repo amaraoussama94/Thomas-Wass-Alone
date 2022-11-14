@@ -1,4 +1,5 @@
 #include "PlayableCharacter.hpp"
+#include <iostream>
 
 void PlayableCharacter::spawn(Vector2f startPosition, float gravity)
 {
@@ -13,7 +14,7 @@ void PlayableCharacter::spawn(Vector2f startPosition, float gravity)
 
 
 void PlayableCharacter::update(float elapsedTime)
-{
+{   
     if (m_RightPressed)
     {
         m_Position.x += m_Speed * elapsedTime;
@@ -68,6 +69,7 @@ void PlayableCharacter::update(float elapsedTime)
     m_Left.height = r.height * .3;
     // Move the sprite into position
     m_Sprite.setPosition(m_Position);
+
 }
 
 FloatRect PlayableCharacter::getPosition()

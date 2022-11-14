@@ -20,7 +20,7 @@ void Engine::update(float dtAsSeconds)
     }
 
     if (m_Playing)
-    {
+    {   
         // Update Thomas
         m_Thomas.update(dtAsSeconds);
         // Update Bob
