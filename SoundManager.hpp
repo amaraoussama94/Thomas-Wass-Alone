@@ -11,7 +11,7 @@ private:
     SoundBuffer m_JumpBuffer;
     SoundBuffer m_ReachGoalBuffer;
     // The Sounds
-    Sound m_Fire1Sound;
+    Sound m_Fire1Sound;//We do this so that we can have multiple roaring sound effects playing,
     Sound m_Fire2Sound;
     Sound m_Fire3Sound;
     Sound m_FallInFireSound;
@@ -22,8 +22,7 @@ private:
     int m_NextSound = 1;
 public:
     SoundManager();
-    void playFire(Vector2f emitterLocation,
-    Vector2f listenerLocation);
+    void playFire(Vector2f emitterLocation,Vector2f listenerLocation);//location of the emitter and location of the listener
     void playFallInFire();
     void playFallInWater();
     void playJump();
