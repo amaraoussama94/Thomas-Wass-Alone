@@ -28,3 +28,26 @@ Hud::Hud()
     m_LevelText.setPosition(25, 0);
     m_LevelText.setString("1");
 }
+
+Text Hud::getMessage()
+{
+    return m_StartText;
+}
+Text Hud::getLevel()
+{
+    return m_LevelText;
+}
+Text Hud::getTime()
+{
+    return m_TimeText;
+}
+//every 500 frames
+void Hud::setLevel(String text)
+{
+    m_LevelText.setString(text);
+}
+void Hud::setTime(String text)
+{
+    m_TimeText.setString(text);
+}
+

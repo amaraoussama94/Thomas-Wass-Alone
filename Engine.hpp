@@ -5,7 +5,7 @@
 #include "Bob.hpp"
 #include "LevelManager.hpp"
 #include "SoundManager.hpp"
-
+#include "HUD.hpp"
 
 using namespace sf;
 
@@ -21,6 +21,11 @@ private:
 
 	// Create a SoundManager
 	SoundManager m_SM;
+
+	// The Hud
+	Hud m_Hud;
+	int m_FramesSinceLastHUDUpdate = 0;
+	int m_TargetFramesPerHUDUpdate = 500;
 
 	// A class to manage all the levels
 	LevelManager m_LM;
