@@ -33,5 +33,5 @@ void Engine::populateEmitters( vector <Vector2f>& vSoundEmitters,int** arrayLeve
             }
         }
     }
-    //return;
+    return;
 }
