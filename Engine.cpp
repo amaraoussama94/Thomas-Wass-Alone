@@ -37,6 +37,19 @@ Engine::Engine()
 		m_Window.close();
 	}
 
+	// Can this graphics card use shaders?
+	if (!sf::Shader::isAvailable())
+	{
+		// Time to get a new PC
+		// Or remove all the shader related code 
+		m_Window.close();
+	}
+	else
+	{
+		// Load two shaders (1 vertex, 1 fragment)
+		m_RippleShader.loadFromFile("shaders/vertShader.vert","shaders/rippleShader.frag");
+	}
+	
 	m_BackgroundTexture = TextureHolder::GetTexture(
 		"graphics/background.png");
 
