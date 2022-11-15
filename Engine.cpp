@@ -49,7 +49,7 @@ Engine::Engine()
 
 	// Initialize the particle system
 	m_PS.init(1000);
-	
+
 }// End Engine constructor
 
 void Engine::run()

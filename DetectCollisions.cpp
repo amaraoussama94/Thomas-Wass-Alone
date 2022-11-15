@@ -101,7 +101,7 @@ bool Engine::detectCollisions(PlayableCharacter& character)
 			{
 				if (m_ArrayLevel[y][x] == 2 || m_ArrayLevel[y][x] == 3)
 				{
-					if (character.getFeet().intersects(block))
+					if (character.getFeet().intersects(block))//checks whether the character's feet are in contact with it.
 					{
 						// position and start the particle system
 						m_PS.emitParticles(character.getCenter());
