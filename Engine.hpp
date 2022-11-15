@@ -6,6 +6,7 @@
 #include "LevelManager.hpp"
 #include "SoundManager.hpp"
 #include "HUD.hpp"
+#include "ParticleSystem.hpp"
 
 using namespace sf;
 
@@ -15,8 +16,11 @@ private:
 	// The texture holder
 	TextureHolder th;
 
+	// create a particle system
+	ParticleSystem m_PS;
+	
 	// Thomas and his friend, Bob
-	Thomas m_Thomas;
+	Thomas m_Thomas; 
 	Bob m_Bob;
 
 	// Create a SoundManager
