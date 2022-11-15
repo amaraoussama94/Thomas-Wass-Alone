@@ -47,7 +47,10 @@ Engine::Engine()
 	m_TextureTiles = TextureHolder::GetTexture(
 		"graphics/tiles_sheet.png");
 
-}
+	// Initialize the particle system
+	m_PS.init(1000);
+	
+}// End Engine constructor
 
 void Engine::run()
 {
