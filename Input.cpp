@@ -5,6 +5,10 @@ void Engine::input()
 	Event event;
 	while (m_Window.pollEvent(event))
 	{
+		if (event.type == sf::Event::Closed)
+		{
+			m_Window.close();
+		}
 		if (event.type == Event::KeyPressed)
 		{
 			
