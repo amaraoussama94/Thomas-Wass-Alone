@@ -2,6 +2,7 @@
 #include "TextureHolder.hpp"
 
 Thomas::Thomas()
+: PlayableCharacter("graphics/thomas.png", 0.45f) // example args
 {
 	// Associate a texture with the sprite
 	m_Sprite = Sprite(TextureHolder::GetTexture(
