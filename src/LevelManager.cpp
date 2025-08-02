@@ -1,47 +1,42 @@
-#include "LevelManager.hpp"
+
 #include <fstream>
+#include "LevelManager.hpp"
 
 int** LevelManager::nextLevel(sf::VertexArray& rVaLevel)
 {
     // Increment the current level
     m_CurrentLevel++;
-
-    // Reset to level 1 if we reached beyond the last
     if (m_CurrentLevel > m_NumLevels)
         m_CurrentLevel = 1;
 
     std::string levelPath = "levels/level" + std::to_string(m_CurrentLevel) + ".txt";
-
     std::ifstream inputFile(levelPath);
     std::string line;
     std::vector<std::string> levelLines;
 
-    // Read level data from file
+    // Read the level file line by line
     while (std::getline(inputFile, line))
     {
         levelLines.push_back(line);
     }
 
-    // Set level size based on file
     m_LevelSize.y = levelLines.size();
     m_LevelSize.x = levelLines[0].length();
 
-    // Allocate memory for the level array
+    // Allocate the level array
     int** levelArray = new int*[m_LevelSize.y];
     for (int i = 0; i < m_LevelSize.y; ++i)
     {
         levelArray[i] = new int[m_LevelSize.x];
     }
 
-    // Parse the level map
+    // Fill the array with values from file
     for (size_t y = 0; y < levelLines.size(); ++y)
     {
         std::string row = levelLines[y];
-
         for (size_t x = 0; x < row.length(); ++x)
         {
             char cell = row[x];
-
             switch (cell)
             {
                 case '1':
@@ -59,13 +54,11 @@ int** LevelManager::nextLevel(sf::VertexArray& rVaLevel)
         }
     }
 
-    // Clear the vertex array
+    // Clear and set primitive type
     rVaLevel.clear();
-
-    // SFML 3.0 uses triangles now
     rVaLevel.setPrimitiveType(sf::PrimitiveType::Triangles);
 
-    // Populate the vertex array based on level data
+    // Build geometry using triangles
     for (int y = 0; y < m_LevelSize.y; ++y)
     {
         for (int x = 0; x < m_LevelSize.x; ++x)
@@ -84,20 +77,28 @@ int** LevelManager::nextLevel(sf::VertexArray& rVaLevel)
                 sf::Vector2f texBottomLeft  = {0.f, TILE_SIZE};
                 sf::Vector2f texBottomRight = {TILE_SIZE, TILE_SIZE};
 
-                // First triangle
-                rVaLevel.append(sf::Vertex(topLeft, texTopLeft));
-                rVaLevel.append(sf::Vertex(topRight, texTopRight));
-                rVaLevel.append(sf::Vertex(bottomRight, texBottomRight));
+                // First triangle (topLeft, topRight, bottomRight)
+                sf::Vertex v1, v2, v3;
+                v1.position = topLeft;     v1.texCoords = texTopLeft;
+                v2.position = topRight;    v2.texCoords = texTopRight;
+                v3.position = bottomRight; v3.texCoords = texBottomRight;
+                rVaLevel.append(v1);
+                rVaLevel.append(v2);
+                rVaLevel.append(v3);
 
-                // Second triangle
-                rVaLevel.append(sf::Vertex(topLeft, texTopLeft));
-                rVaLevel.append(sf::Vertex(bottomRight, texBottomRight));
-                rVaLevel.append(sf::Vertex(bottomLeft, texBottomLeft));
+                // Second triangle (topLeft, bottomRight, bottomLeft)
+                sf::Vertex v4, v5, v6;
+                v4.position = topLeft;     v4.texCoords = texTopLeft;
+                v5.position = bottomRight; v5.texCoords = texBottomRight;
+                v6.position = bottomLeft;  v6.texCoords = texBottomLeft;
+                rVaLevel.append(v4);
+                rVaLevel.append(v5);
+                rVaLevel.append(v6);
             }
         }
     }
 
-    // Scale time limit based on level size
+    // Set the time limit for the level
     m_BaseTimeLimit = m_LevelSize.y * 10.0f;
     return levelArray;
 }
