@@ -14,25 +14,25 @@ void Engine::input()
 			
 
 			// Handle the player quitting
-			if (Keyboard::isKeyPressed(Keyboard::Escape))
+			if (Keyboard::isKeyPressed(Keyboard::Key::Escape))
 			{
 				m_Window.close();
 			}
 
 			// Handle the player starting the game
-			if (Keyboard::isKeyPressed(Keyboard::Return))
+			if (Keyboard::isKeyPressed(Keyboard::Key::Return))
 			{
 				m_Playing = true;
 			}
 
 			// Switch between Thomas and Bob
-			if (Keyboard::isKeyPressed(Keyboard::Tab))
+			if (Keyboard::isKeyPressed(Keyboard::Key::Tab))
 			{
 				m_Character1 = !m_Character1;
 			}
 
 			// Switch between full and split-screen
-			if (Keyboard::isKeyPressed(Keyboard::E))
+			if (Keyboard::isKeyPressed(Keyboard::Key::E))
 			{
 				m_SplitScreen = !m_SplitScreen;
 			}

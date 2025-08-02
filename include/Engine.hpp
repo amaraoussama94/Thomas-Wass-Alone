@@ -10,105 +10,84 @@
 
 using namespace sf;
 
-class Engine
-{
+class Engine {
 private:
-	// The texture holder
-	TextureHolder th;
+    //-------------------------
+    // Core Game Management
+    //-------------------------
+    RenderWindow m_Window;              // Main game window
+    TextureHolder th;                   // Texture manager (singleton pattern)
 
-	// create a particle system
-	ParticleSystem m_PS;
-	
-	// Thomas and his friend, Bob
-	Thomas m_Thomas; 
-	Bob m_Bob;
+    //-------------------------
+    // Characters & Gameplay
+    //-------------------------
+    Thomas m_Thomas;                    // First playable character
+    Bob m_Bob;                          // Second playable character
+    bool m_Character1 = true;           // Active character (Thomas/Bob)
+    bool m_Playing = false;             // Game state flag
+    bool m_SplitScreen = false;         // Split-screen mode toggle
 
-	// Create a SoundManager
-	SoundManager m_SM;
+    //-------------------------
+    // Environment & Level Data
+    //-------------------------
+    LevelManager m_LM;                  // Level layout loader
+    bool m_NewLevelRequired = true;     // Flag to trigger level refresh
+    VertexArray m_VALevel;              // Tile vertex array for rendering
+    int** m_ArrayLevel = nullptr;       // Raw level data array
+    Texture m_TextureTiles;             // Tilesheet texture
 
-	// The Hud
-	Hud m_Hud;
-	int m_FramesSinceLastHUDUpdate = 0;
-	int m_TargetFramesPerHUDUpdate = 500;
+    //-------------------------
+    // Views & Camera System
+    //-------------------------
+    View m_MainView;                    // Full-screen view
+    View m_LeftView, m_RightView;       // Split-screen character views
+    View m_BGMainView, m_BGLeftView, m_BGRightView; // Background decor views
+    View m_HudView;                     // HUD overlay view
 
-	// A class to manage all the levels
-	LevelManager m_LM;
+    //-------------------------
+    // Background & Visual Effects
+    //-------------------------
+    Texture m_BackgroundTexture;        // Background texture (parallax decor)
+    Sprite m_BackgroundSprite;          // Sprite initialized in constructor
+    Shader m_RippleShader;              // Shader for ripple/water/fire effect
+    ParticleSystem m_PS;                // Particle system manager
 
-	const int TILE_SIZE = 50;
-	const int VERTS_IN_QUAD = 4;
+    //-------------------------
+    // HUD & Feedback Systems
+    //-------------------------
+    Hud m_Hud;                          // HUD UI manager
+    int m_FramesSinceLastHUDUpdate = 0;    // Frame counter for HUD refresh
+    int m_TargetFramesPerHUDUpdate = 500;  // Target frames between HUD updates
 
-	// The force pushing the characters down
-	const int GRAVITY = 300;
+    //-------------------------
+    // Audio Management
+    //-------------------------
+    SoundManager m_SM;                  // Sound effect manager
+    std::vector<Vector2f> m_FireEmitters;  // Positions for fire sound emitters
 
-	// A regular RenderWindow
-	RenderWindow m_Window;
+    //-------------------------
+    // Timing & Game Rules
+    //-------------------------
+    float m_TimeRemaining = 10;         // Countdown timer per level
+    Time m_GameTimeTotal;               // Accumulated game time
+    const int TILE_SIZE = 50;           // Tile dimension in pixels
+    const int VERTS_IN_QUAD = 4;        // Vertices per quad (SFML rendering)
+    const int GRAVITY = 300;            // Gravity constant for characters
 
-	// The main Views
-	View m_MainView;
-	View m_LeftView;
-	View m_RightView;
+    //-------------------------
+    // Internal Logic Functions
+    //-------------------------
+    void input();                       // Handle all input events
+    void update(float dtAsSeconds);     // Game state update
+    void draw();                        // Render all visual elements
+    void loadLevel();                   // Setup and initialize level
+    bool detectCollisions(PlayableCharacter& character); // Collision check
+    void populateEmitters(std::vector<Vector2f>& vSoundEmitters, int** arrayLevel); // Setup sound emitters
 
-	// Three views for the background
-	View m_BGMainView;
-	View m_BGLeftView;
-	View m_BGRightView;
-
-	View m_HudView;
-
-	// Declare a sprite and a Texture for the background
-	Sprite m_BackgroundSprite;
-	Texture m_BackgroundTexture;
-
-	// Declare a shader for the background
-	Shader m_RippleShader;
-
-	// Is the game currently playing?
-	bool m_Playing = false;
-
-	// Is character 1 or 2 the current focus?
-	bool m_Character1 = true;//Initially, it is initialized to true, to center on Thomas
-
-	// Start in full screen mode
-	bool m_SplitScreen = false;
-
-	// How much time is left in the current level
-	float m_TimeRemaining = 10;
-	Time m_GameTimeTotal;
-
-	// Is it time for a new/first level?
-	bool m_NewLevelRequired = true;
-
-	// The vertex array for the level design
-	VertexArray m_VALevel;
-
-	// The 2d array with the map for the level
-	// A pointer to a pointer
-	int** m_ArrayLevel = NULL;
-
-	// Texture for the background and the level tiles
-	Texture m_TextureTiles;
-	
-	// Private functions for internal use only
-	void input();
-	void update(float dtAsSeconds);
-	void draw();	
-
-	// Load a new level
-	void loadLevel();
-
-	// Run will call all the private functions
-	bool detectCollisions(PlayableCharacter& character);
-	
-	// Make a vector of the best places to emit sounds from
-	void populateEmitters(vector <Vector2f>& vSoundEmitters,int** arrayLevel);
-	// A vector of Vector2f for the fire emitter locations
-	vector <Vector2f> m_FireEmitters;
-		
 public:
-	// The Engine constructor
-	Engine();
+    // Constructor handles sprite initialization and component setup
+    Engine();
 
-	// Run will call all the private functions
-	void run();
-
+    // Main game loop runs update/render logic
+    void run();
 };

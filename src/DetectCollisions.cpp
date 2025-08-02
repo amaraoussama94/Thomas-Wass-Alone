@@ -1,125 +1,76 @@
 #include "Engine.hpp"
+#include <SFML/Graphics/Rect.hpp> // For FloatRect and findIntersection
 
 bool Engine::detectCollisions(PlayableCharacter& character)
 {
-	bool reachedGoal = false;
-	// Make a rect for all his parts
-	FloatRect detectionZone = character.getPosition();
+    bool reachedGoal = false;
 
-	// Make a FloatRect to test each block
-	FloatRect block;
+    sf::FloatRect detectionZone = character.getPosition();
+    sf::FloatRect block({0.f, 0.f}, {TILE_SIZE, TILE_SIZE});
 
-	block.width = TILE_SIZE;
-	block.height = TILE_SIZE;
+    int startX = static_cast<int>(detectionZone.position.x / TILE_SIZE) - 1;
+    int startY = static_cast<int>(detectionZone.position.y / TILE_SIZE) - 1;
+    int endX   = static_cast<int>(detectionZone.position.x / TILE_SIZE) + 2;
+    int endY   = static_cast<int>(detectionZone.position.y / TILE_SIZE) + 3;
 
-	// Build a zone around thomas to detect collisions
-	int startX = (int)(detectionZone.left / TILE_SIZE) - 1;
-	int startY = (int)(detectionZone.top / TILE_SIZE) - 1;
-	int endX = (int)(detectionZone.left / TILE_SIZE) + 2;
+    startX = std::max(startX, 0);
+    startY = std::max(startY, 0);
+    endX = std::min(endX, static_cast<int>(m_LM.getLevelSize().x));
+    endY = std::min(endY, static_cast<int>(m_LM.getLevelSize().y));
 
-	// Thomas is quite tall so check a few tiles vertically
-	int endY = (int)(detectionZone.top / TILE_SIZE) + 3;
+    sf::FloatRect level({0.f, 0.f}, {
+        m_LM.getLevelSize().x * TILE_SIZE,
+        m_LM.getLevelSize().y * TILE_SIZE });
 
-	// Make sure we don't test positions lower than zero
-	// Or higher than the end of the array
-	if (startX < 0)startX = 0;
-	if (startY < 0)startY = 0;
-	if (endX >= m_LM.getLevelSize().x)
-		endX = m_LM.getLevelSize().x;
-	if (endY >= m_LM.getLevelSize().y)
-		endY = m_LM.getLevelSize().y;
+    if (!detectionZone.findIntersection(level).has_value())
+    {
+        character.spawn(m_LM.getStartPosition(), GRAVITY);
+    }
 
-	// Has the character fallen out of the map?
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!This can be part of level manager!!!!!!!!!!!!!!!!!!!!!!!!
-	FloatRect level(0, 0, m_LM.getLevelSize().x * TILE_SIZE, m_LM.getLevelSize().y * TILE_SIZE);
-	if (!character.getPosition().intersects(level))
-	{
-		// respawn the character
-		character.spawn(m_LM.getStartPosition(), GRAVITY);
-	}
+    for (int x = startX; x < endX; ++x)
+    {
+        for (int y = startY; y < endY; ++y)
+        {
+            block.position.x = x * TILE_SIZE;
+            block.position.y = y * TILE_SIZE;
+            int tile = m_ArrayLevel[y][x];
 
-	for (int x = startX; x < endX; x++)
-	{
-		for (int y = startY; y < endY; y++)
-		{
-			// Initialize the starting position of the current block
-			block.left = x * TILE_SIZE;
-			block.top = y * TILE_SIZE;
+            if ((tile == 2 || tile == 3) &&
+                character.getHead().findIntersection(block).has_value())
+            {
+                character.spawn(m_LM.getStartPosition(), GRAVITY);
+                if (tile == 2)
+                    m_SM.playFallInFire();
+                else
+                    m_SM.playFallInWater();
+            }
 
-			// Has character been burnt or drowned?
-			// Use head as this allows him to sink a bit
-			if (m_ArrayLevel[y][x] == 2 || m_ArrayLevel[y][x] == 3)//determines whether the current position being checked is a fire or a water
-			{
-				if (character.getHead().intersects(block))
-				{
-					character.spawn(m_LM.getStartPosition(), GRAVITY);//rebirth
-					// Which sound should be played?
-					if (m_ArrayLevel[y][x] == 2)// Fire, ouch!
-					{
-						// Play a sound
-						m_SM.playFallInFire();
+            if (tile == 1)
+            {
+                if (character.getRight().findIntersection(block).has_value())
+                    character.stopRight(block.position.x);
+                else if (character.getLeft().findIntersection(block).has_value())
+                    character.stopLeft(block.position.x);
 
-					}
-					else // Water
-					{
-						// Play a sound
-						m_SM.playFallInWater();
-					}
-				}
-			}
+                if (character.getFeet().findIntersection(block).has_value())
+                    character.stopFalling(block.position.y);
+                else if (character.getHead().findIntersection(block).has_value())
+                    character.stopJump();
+            }
 
+            if (!m_PS.running() &&
+                (tile == 2 || tile == 3) &&
+                character.getFeet().findIntersection(block).has_value())
+            {
+                m_PS.emitParticles(character.getCenter());
+            }
 
-			// Is character colliding with a regular block
-			if (m_ArrayLevel[y][x] == 1)
-			{
+            if (tile == 4)
+            {
+                reachedGoal = true;
+            }
+        }
+    }
 
-				if (character.getRight().intersects(block))
-				{
-					character.stopRight(block.left);
-				}
-				else if (character.getLeft().intersects(block))
-				{
-					character.stopLeft(block.left);
-				}
-
-
-				if (character.getFeet().intersects(block))
-				{
-					character.stopFalling(block.top);
-				}
-				else if (character.getHead().intersects(block))
-				{
-					character.stopJump();
-				}
-			}
-			
-			// Have the characters' feet touched fire or water?
-			// If so, start a particle effect
-			// Make sure this is the first time we have detected this
-			// by seeing if an effect is already running
-			if (!m_PS.running())
-			{
-				if (m_ArrayLevel[y][x] == 2 || m_ArrayLevel[y][x] == 3)
-				{
-					if (character.getFeet().intersects(block))//checks whether the character's feet are in contact with it.
-					{
-						// position and start the particle system
-						m_PS.emitParticles(character.getCenter());
-					}
-				}
-			}
-
-			// Has the character reached the goal?
-			if (m_ArrayLevel[y][x] == 4)
-			{
-				// Character has reached the goal
-				reachedGoal = true;
-			}
-
-		}
-
-	}
-
-	// All done, return, wheteher or not a new level might be required
-	return reachedGoal;
+    return reachedGoal;
 }
