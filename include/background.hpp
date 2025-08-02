@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "TextureHolder.h"
+#include "TextureHolder.hpp"
 
 class Background
 {

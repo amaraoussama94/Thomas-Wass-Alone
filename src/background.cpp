@@ -1,12 +1,9 @@
-#include "Background.h"
+#include "Background.hpp"
 
 Background::Background()
+    : m_BackgroundTexture(TextureHolder::GetTexture("graphics/background.png")),
+      m_BackgroundSprite(m_BackgroundTexture) // Initializes with texture directly
 {
-    // Load texture directly through your TextureHolder singleton
-    m_BackgroundTexture = TextureHolder::GetTexture("graphics/background.png");
-
-    // Immediately initialize the sprite with the texture
-    m_BackgroundSprite = sf::Sprite(m_BackgroundTexture);
 }
 
 void Background::draw(sf::RenderWindow& window)
