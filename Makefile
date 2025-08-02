@@ -23,7 +23,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -I$(SFML_INSTALL_DIR)/include -I$(INC_DIR)
 
 # Linker flags
-LDFLAGS = -L$(SFML_INSTALL_DIR)/lib -lsfml-graphics -lsfml-window -lsfml-system
+LDFLAGS = -L$(SFML_INSTALL_DIR)/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 # Finds all .cpp files in src/
 SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
@@ -95,9 +95,10 @@ ifeq ($(UNAME_S),Linux)
 SFML_GRAPHICS_LIB = $(SFML_INSTALL_DIR)/lib/libsfml-graphics.a
 else
 SFML_GRAPHICS_LIB = $(SFML_INSTALL_DIR)/bin/sfml-graphics-3.dll
+SFML_AUDIO_LIB     = $(SFML_INSTALL_DIR)/bin/sfml-audio-3.dll
 endif
 
-all: check-shell $(SFML_GRAPHICS_LIB) $(EXE)
+all: check-shell $(SFML_GRAPHICS_LIB) $(SFML_AUDIO_LIB) $(EXE)
 
 # === Build and Install SFML from Source ===
 # This rule ensures SFML is built and installed before compiling the game.
@@ -115,7 +116,7 @@ all: check-shell $(SFML_GRAPHICS_LIB) $(EXE)
 #
 # This setup ensures your project uses a clean, portable, and compiler-compatible SFML build.
 
-$(SFML_INSTALL_DIR)/lib/libsfml-graphics.a $(SFML_INSTALL_DIR)/bin/sfml-graphics-3.dll:
+$(SFML_INSTALL_DIR)/lib/libsfml-graphics.a $(SFML_INSTALL_DIR)/bin/sfml-graphics-3.dll   $(SFML_INSTALL_DIR)/bin/sfml-audio-3.dll:
 	@echo "Building SFML in $(SFML_BUILD_DIR)..."
 	mkdir -p $(SFML_BUILD_DIR)
 	cd $(SFML_BUILD_DIR) && $(CMAKE_ENV) cmake .. $(CMAKE_GENERATOR) $(CMAKE_FLAGS) \
