@@ -2,6 +2,7 @@
 #include "TextureHolder.hpp"
 
 Thomas::Thomas()
+:PlayableCharacter(TextureHolder::GetTexture("graphics/thomas.png"))
 {
 	// Associate a texture with the sprite
 	m_Sprite = Sprite(TextureHolder::GetTexture(
@@ -15,7 +16,7 @@ bool Thomas::handleInput()
 {
 	m_JustJumped = false;
 
-	if (Keyboard::isKeyPressed(Keyboard::Z))
+	if (Keyboard::isKeyPressed(Keyboard::Key::Z))
 	{
 
 		// Start a jump if not already jumping
@@ -33,7 +34,7 @@ bool Thomas::handleInput()
 		m_IsFalling = true;
 
 	}
-	if (Keyboard::isKeyPressed(Keyboard::Q))
+	if (Keyboard::isKeyPressed(Keyboard::Key::Q))
 	{
 		m_LeftPressed = true;
 	}
@@ -43,7 +44,7 @@ bool Thomas::handleInput()
 	}
 
 
-	if (Keyboard::isKeyPressed(Keyboard::D))
+	if (Keyboard::isKeyPressed(Keyboard::Key::D))
 	{
 		m_RightPressed = true;
 	}
