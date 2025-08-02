@@ -102,3 +102,23 @@ int** LevelManager::nextLevel(sf::VertexArray& rVaLevel)
     m_BaseTimeLimit = m_LevelSize.y * 10.0f;
     return levelArray;
 }
+
+float LevelManager::getTimeLimit()
+{
+    return m_BaseTimeLimit * m_TimeModifier;
+}
+
+sf::Vector2f LevelManager::getStartPosition()
+{
+    return m_StartPosition;
+}
+
+sf::Vector2i LevelManager::getLevelSize()
+{
+    return m_LevelSize;
+}
+
+int LevelManager::getCurrentLevel()
+{
+    return m_CurrentLevel;
+}
