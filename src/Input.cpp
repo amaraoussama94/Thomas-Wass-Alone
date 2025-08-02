@@ -4,57 +4,38 @@ void Engine::input()
 {
     while (auto eventOpt = m_Window.pollEvent())
     {
-        std::visit([&](auto&& event) {
-            using T = std::decay_t<decltype(event)>;
+        const sf::Event& event = *eventOpt;
 
-            // Handle window close event
-            if constexpr (std::is_same_v<T, sf::Event::WindowClosed>)
-            {
+        // Handle window close
+        if (event.is<sf::Event::Closed>())
+        {
+            m_Window.close();
+        }
+
+        // Handle key press
+        if (const auto* keyEvent = event.getIf<sf::Event::KeyPressed>())
+        {
+            const auto key = keyEvent->code;
+
+            if (key == sf::Keyboard::Key::Escape)
                 m_Window.close();
-            }
 
-            // Handle key pressed
-            if constexpr (std::is_same_v<T, sf::Event::KeyPressed>)
-            {
-                // Handle the player quitting
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
-                {
-                    m_Window.close();
-                }
+            if (key == sf::Keyboard::Key::Enter)
+                m_Playing = true;
 
-                // Handle the player starting the game
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
-                {
-                    m_Playing = true;
-                }
+            if (key == sf::Keyboard::Key::Tab)
+                m_Character1 = !m_Character1;
 
-                // Switch between Thomas and Bob
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Tab))
-                {
-                    m_Character1 = !m_Character1;
-                }
-
-                // Switch between full and split-screen
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E))
-                {
-                    m_SplitScreen = !m_SplitScreen;
-                }
-            }
-        }, *eventOpt);
+            if (key == sf::Keyboard::Key::E)
+                m_SplitScreen = !m_SplitScreen;
+        }
     }
 
     // Handle input specific to Thomas
     if (m_Thomas.handleInput())
-    {
-        // Play a jump sound
         m_SM.playJump();
-    }
 
     // Handle input specific to Bob
     if (m_Bob.handleInput())
-    {
-        // Play a jump sound
         m_SM.playJump();
-    }
 }
-

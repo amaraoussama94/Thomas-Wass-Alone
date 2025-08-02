@@ -1,168 +1,103 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include "TextureHolder.hpp"
-#include <sstream>
-#include <fstream>
 #include "LevelManager.hpp"
+#include <fstream>
 
-using namespace sf;
-using namespace std;
-
-int** LevelManager::nextLevel(VertexArray& rVaLevel)
+int** LevelManager::nextLevel(sf::VertexArray& rVaLevel)
 {
-	m_LevelSize.x = 0;
-	m_LevelSize.y = 0;
+    // Increment the current level
+    m_CurrentLevel++;
 
-	// Get the next level
-	m_CurrentLevel++;
-	if (m_CurrentLevel > NUM_LEVELS)
-	{
-		m_CurrentLevel = 1;
-		m_TimeModifier -= .1f;
-	}
+    // Reset to level 1 if we reached beyond the last
+    if (m_CurrentLevel > m_NumLevels)
+        m_CurrentLevel = 1;
 
-	// Load the appropriate level from a text file
-	string levelToLoad;
-	switch (m_CurrentLevel)
-	{
-	
-	case 1:
-		levelToLoad = "levels/level1.txt";
-		m_StartPosition.x = 100;
-		m_StartPosition.y = 100;
-		m_BaseTimeLimit = 30.0f;
-		break;
+    std::string levelPath = "levels/level" + std::to_string(m_CurrentLevel) + ".txt";
 
-	case 2:
-		levelToLoad = "levels/level2.txt";
-		m_StartPosition.x = 100;
-		m_StartPosition.y = 3600;
-		m_BaseTimeLimit = 100.0f;
-		break;
+    std::ifstream inputFile(levelPath);
+    std::string line;
+    std::vector<std::string> levelLines;
 
-	case 3:
-		levelToLoad = "levels/level3.txt";
-		m_StartPosition.x = 1250;
-		m_StartPosition.y = 0;
-		m_BaseTimeLimit = 30.0f;
-		break;
+    // Read level data from file
+    while (std::getline(inputFile, line))
+    {
+        levelLines.push_back(line);
+    }
 
-	case 4:
-		levelToLoad = "levels/level4.txt";
-		m_StartPosition.x = 50;
-		m_StartPosition.y = 200;
-		m_BaseTimeLimit = 50.0f;
-		break;
+    // Set level size based on file
+    m_LevelSize.y = levelLines.size();
+    m_LevelSize.x = levelLines[0].length();
 
+    // Allocate memory for the level array
+    int** levelArray = new int*[m_LevelSize.y];
+    for (int i = 0; i < m_LevelSize.y; ++i)
+    {
+        levelArray[i] = new int[m_LevelSize.x];
+    }
 
-	}
+    // Parse the level map
+    for (size_t y = 0; y < levelLines.size(); ++y)
+    {
+        std::string row = levelLines[y];
 
-	ifstream inputFile(levelToLoad);
-	string s;
+        for (size_t x = 0; x < row.length(); ++x)
+        {
+            char cell = row[x];
 
-	// Count the number of rows in the file
-	while (getline(inputFile, s))
-	{
-		++m_LevelSize.y;
-	}
+            switch (cell)
+            {
+                case '1':
+                    levelArray[y][x] = 1;
+                    break;
+                case '2':
+                    levelArray[y][x] = 2;
+                    m_StartPosition.x = static_cast<float>(x * TILE_SIZE);
+                    m_StartPosition.y = static_cast<float>(y * TILE_SIZE);
+                    break;
+                default:
+                    levelArray[y][x] = 0;
+                    break;
+            }
+        }
+    }
 
-	// Store the length of the rows
-	m_LevelSize.x = s.length();
+    // Clear the vertex array
+    rVaLevel.clear();
 
-	// Go back to the start of the file
-	inputFile.clear();
-	inputFile.seekg(0, ios::beg);//moves the file cursor's position (where characters will be read from next) to the beginning of the file
+    // SFML 3.0 uses triangles now
+    rVaLevel.setPrimitiveType(sf::PrimitiveType::Triangles);
 
-	// Prepare the 2d array to hold the int values from the file
-	int** arrayLevel = new int*[m_LevelSize.y];
-	for (int i = 0; i < m_LevelSize.y; ++i)
-	{
-		// Add a new array into each array element
-		arrayLevel[i] = new int[m_LevelSize.x];
-	}
+    // Populate the vertex array based on level data
+    for (int y = 0; y < m_LevelSize.y; ++y)
+    {
+        for (int x = 0; x < m_LevelSize.x; ++x)
+        {
+            if (levelArray[y][x] == 1)
+            {
+                sf::Vector2f position(x * TILE_SIZE, y * TILE_SIZE);
 
-	// Loop through the file and store all the values in the 2d array
-	string row;
-	int y = 0;
-	while (inputFile >> row)
-	{
-		for (int x = 0; x < row.length(); x++) {
+                sf::Vector2f topLeft     = position;
+                sf::Vector2f topRight    = position + sf::Vector2f(TILE_SIZE, 0);
+                sf::Vector2f bottomLeft  = position + sf::Vector2f(0, TILE_SIZE);
+                sf::Vector2f bottomRight = position + sf::Vector2f(TILE_SIZE, TILE_SIZE);
 
-			const char val = row[x];
-			arrayLevel[y][x] = atoi(&val);
-		}
+                sf::Vector2f texTopLeft     = {0.f, 0.f};
+                sf::Vector2f texTopRight    = {TILE_SIZE, 0.f};
+                sf::Vector2f texBottomLeft  = {0.f, TILE_SIZE};
+                sf::Vector2f texBottomRight = {TILE_SIZE, TILE_SIZE};
 
-		y++;
-	}
+                // First triangle
+                rVaLevel.append(sf::Vertex(topLeft, texTopLeft));
+                rVaLevel.append(sf::Vertex(topRight, texTopRight));
+                rVaLevel.append(sf::Vertex(bottomRight, texBottomRight));
 
-	// close the file
-	inputFile.close();
+                // Second triangle
+                rVaLevel.append(sf::Vertex(topLeft, texTopLeft));
+                rVaLevel.append(sf::Vertex(bottomRight, texBottomRight));
+                rVaLevel.append(sf::Vertex(bottomLeft, texBottomLeft));
+            }
+        }
+    }
 
-	// What type of primitive are we using?
-	rVaLevel.setPrimitiveType(Quads);
-
-	// Set the size of the vertex array
-	rVaLevel.resize(m_LevelSize.x * m_LevelSize.y * VERTS_IN_QUAD);
-
-	// Start at the beginning of the vertex array
-	int currentVertex = 0;
-
-	for (int x = 0; x < m_LevelSize.x; x++)
-	{
-		for (int y = 0; y < m_LevelSize.y; y++)
-		{
-			// Position each vertex in the current quad
-			rVaLevel[currentVertex + 0].position = 
-				Vector2f(x * TILE_SIZE, y * TILE_SIZE);
-
-			rVaLevel[currentVertex + 1].position = 
-				Vector2f((x * TILE_SIZE) + TILE_SIZE, y * TILE_SIZE);
-
-			rVaLevel[currentVertex + 2].position = 
-				Vector2f((x * TILE_SIZE) + TILE_SIZE, (y * TILE_SIZE) + TILE_SIZE);
-
-			rVaLevel[currentVertex + 3].position = 
-				Vector2f((x * TILE_SIZE), (y * TILE_SIZE) + TILE_SIZE);
-
-			// Which tile from the sprite sheet should we use
-			int verticalOffset = arrayLevel[y][x] * TILE_SIZE;
-
-			rVaLevel[currentVertex + 0].texCoords = 
-				Vector2f(0, 0 + verticalOffset);
-
-			rVaLevel[currentVertex + 1].texCoords = 
-				Vector2f(TILE_SIZE, 0 + verticalOffset);
-
-			rVaLevel[currentVertex + 2].texCoords = 
-				Vector2f(TILE_SIZE, TILE_SIZE + verticalOffset);
-
-			rVaLevel[currentVertex + 3].texCoords = 
-				Vector2f(0, TILE_SIZE + verticalOffset);
-
-			// Position ready for the next four vertices
-			currentVertex = currentVertex + VERTS_IN_QUAD;
-		}
-	}
-
-	return arrayLevel;
-}
-
-Vector2i LevelManager::getLevelSize()
-{
-	return m_LevelSize;
-}
-
-int LevelManager::getCurrentLevel()
-{
-	return m_CurrentLevel;
-}
-
-float LevelManager::getTimeLimit()
-{
-	return m_BaseTimeLimit * m_TimeModifier;
-
-}
-Vector2f LevelManager::getStartPosition()
-{
-	return m_StartPosition;
+    // Scale time limit based on level size
+    m_BaseTimeLimit = m_LevelSize.y * 10.0f;
+    return levelArray;
 }
