@@ -2,54 +2,59 @@
 
 void Engine::input()
 {
-	Event event;
-	while (m_Window.pollEvent(event))
-	{
-		if (event.type == sf::Event::Closed)
-		{
-			m_Window.close();
-		}
-		if (event.type == Event::KeyPressed)
-		{
-			
+    while (auto eventOpt = m_Window.pollEvent())
+    {
+        std::visit([&](auto&& event) {
+            using T = std::decay_t<decltype(event)>;
 
-			// Handle the player quitting
-			if (Keyboard::isKeyPressed(Keyboard::Key::Escape))
-			{
-				m_Window.close();
-			}
+            // Handle window close event
+            if constexpr (std::is_same_v<T, sf::Event::WindowClosed>)
+            {
+                m_Window.close();
+            }
 
-			// Handle the player starting the game
-			if (Keyboard::isKeyPressed(Keyboard::Key::Return))
-			{
-				m_Playing = true;
-			}
+            // Handle key pressed
+            if constexpr (std::is_same_v<T, sf::Event::KeyPressed>)
+            {
+                // Handle the player quitting
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+                {
+                    m_Window.close();
+                }
 
-			// Switch between Thomas and Bob
-			if (Keyboard::isKeyPressed(Keyboard::Key::Tab))
-			{
-				m_Character1 = !m_Character1;
-			}
+                // Handle the player starting the game
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
+                {
+                    m_Playing = true;
+                }
 
-			// Switch between full and split-screen
-			if (Keyboard::isKeyPressed(Keyboard::Key::E))
-			{
-				m_SplitScreen = !m_SplitScreen;
-			}
-		}
-	}	
+                // Switch between Thomas and Bob
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Tab))
+                {
+                    m_Character1 = !m_Character1;
+                }
 
-	// Handle input specific to Thomas
-	if (m_Thomas.handleInput())
-	{
-		// Play a jump sound
-		m_SM.playJump();
-	}
+                // Switch between full and split-screen
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E))
+                {
+                    m_SplitScreen = !m_SplitScreen;
+                }
+            }
+        }, *eventOpt);
+    }
 
-	// Handle input specific to Bob
-	if (m_Bob.handleInput())
-	{
-		// Play a jump sound
-		m_SM.playJump();
-	}
+    // Handle input specific to Thomas
+    if (m_Thomas.handleInput())
+    {
+        // Play a jump sound
+        m_SM.playJump();
+    }
+
+    // Handle input specific to Bob
+    if (m_Bob.handleInput())
+    {
+        // Play a jump sound
+        m_SM.playJump();
+    }
 }
+

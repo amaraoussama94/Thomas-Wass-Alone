@@ -41,8 +41,8 @@ Engine::Engine()
     }
 
     // Load and bind background texture to sprite (SFML 3.0 compliance)
-    m_BackgroundTexture = TextureHolder::GetTexture("graphics/background.png");
-    m_BackgroundSprite = Sprite(m_BackgroundTexture); // SFML 3.0: sprite requires texture
+	m_BackgroundTexture = TextureHolder::GetTexture("graphics/background.png");
+	m_BackgroundSprite = std::make_unique<sf::Sprite>(m_BackgroundTexture);
 
     // Load tile sheet texture for map rendering
     m_TextureTiles = TextureHolder::GetTexture("graphics/tiles_sheet.png");

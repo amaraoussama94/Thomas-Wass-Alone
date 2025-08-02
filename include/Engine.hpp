@@ -48,7 +48,7 @@ private:
     // Background & Visual Effects
     //-------------------------
     Texture m_BackgroundTexture;        // Background texture (parallax decor)
-    Sprite m_BackgroundSprite;          // Sprite initialized in constructor
+    std::unique_ptr<sf::Sprite> m_BackgroundSprite; // Sprite initialized in constructor
     Shader m_RippleShader;              // Shader for ripple/water/fire effect
     ParticleSystem m_PS;                // Particle system manager
 
