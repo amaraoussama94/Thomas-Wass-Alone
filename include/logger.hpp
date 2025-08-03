@@ -7,7 +7,7 @@ enum class LogLevel { INFO, WARNING, ERROR };
 
 class Logger {
 public:
-    static void log(const std::string& message, LogLevel level = LogLevel::INFO) {
+    static void Log(const std::string& module, const std::string& message, LogLevel level = LogLevel::INFO) {
         std::ofstream logFile("debug.log", std::ios::app);
         if (!logFile) return;
 
@@ -16,7 +16,8 @@ public:
             case LogLevel::WARNING: logFile << "[WARNING] "; break;
             case LogLevel::ERROR: logFile << "[ERROR] "; break;
         }
-        logFile << message << std::endl;
+        logFile << "[" << module << "] " << message << std::endl;
         logFile.close();
     }
+
 };

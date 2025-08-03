@@ -63,7 +63,7 @@ int** LevelManager::nextLevel(sf::VertexArray& rVaLevel)
     }
 
     rVaLevel.clear();
-    rVaLevel.setPrimitiveType(sf::Triangles);
+    rVaLevel.setPrimitiveType(sf::PrimitiveType::Triangles);
     Logger::Log("LevelManager", "Building geometry...");
 
     int solidTileCount = 0;
