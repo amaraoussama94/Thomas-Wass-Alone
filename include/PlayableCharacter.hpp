@@ -49,21 +49,6 @@ private:
 	// All our public functions will come next
 public:
 
-	// New constructor to initialize with a texture
-	PlayableCharacter(const Texture& texture)
-		: m_Texture(texture), m_Sprite(texture)
-	{
-		m_JumpDuration = 0;
-		m_IsJumping = false;
-		m_IsFalling = false;
-		m_LeftPressed = false;
-		m_RightPressed = false;
-		m_TimeThisJump = 0;
-		m_Gravity = 0;
-		m_Position = Vector2f(0.f, 0.f);
-		// You may also want to initialize body part rectangles here if needed
-	}
-
 	void spawn(Vector2f startPosition, float gravity);
 
 	// This is a pure virtual function

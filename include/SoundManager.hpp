@@ -1,33 +1,28 @@
-#pragma once
+ #pragma once
 #include <SFML/Audio.hpp>
 using namespace sf;
-
 class SoundManager
 {
 private:
-    // Buffers
+    // The buffers
     SoundBuffer m_FireBuffer;
     SoundBuffer m_FallInFireBuffer;
     SoundBuffer m_FallInWaterBuffer;
     SoundBuffer m_JumpBuffer;
     SoundBuffer m_ReachGoalBuffer;
-
-    // Sounds (as pointers)
-    Sound* m_Fire1Sound;
-    Sound* m_Fire2Sound;
-    Sound* m_Fire3Sound;
-    Sound* m_FallInFireSound;
-    Sound* m_FallInWaterSound;
-    Sound* m_JumpSound;
-    Sound* m_ReachGoalSound;
-
+    // The Sounds
+    Sound m_Fire1Sound;//We do this so that we can have multiple roaring sound effects playing,
+    Sound m_Fire2Sound;
+    Sound m_Fire3Sound;
+    Sound m_FallInFireSound;
+    Sound m_FallInWaterSound;
+    Sound m_JumpSound;
+    Sound m_ReachGoalSound;
+    // Which sound should we use next, fire 1, 2 or 3
     int m_NextSound = 1;
-
 public:
     SoundManager();
-    ~SoundManager(); // to clean up dynamically allocated sounds
-
-    void playFire(Vector2f emitterLocation, Vector2f listenerLocation);
+    void playFire(Vector2f emitterLocation,Vector2f listenerLocation);//location of the emitter and location of the listener
     void playFallInFire();
     void playFallInWater();
     void playJump();

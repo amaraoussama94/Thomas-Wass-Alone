@@ -1,33 +1,33 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+using namespace sf;
+using namespace std;
+
 
 class LevelManager
 {
 private:
-    sf::Vector2i m_LevelSize;         // Number of tiles in x and y direction
-    sf::Vector2f m_StartPosition;     // Where the player should start
-    float m_TimeModifier = 1.0f;
-    float m_BaseTimeLimit = 0.0f;
-    int m_CurrentLevel = 0;
-    static constexpr int m_NumLevels = 4;
+	Vector2i m_LevelSize; //horizontal and vertical number of tiles that the current map contains
+	Vector2f m_StartPosition;
+	float m_TimeModifier = 1;
+	float m_BaseTimeLimit = 0;
+	int m_CurrentLevel = 0;
+	const int NUM_LEVELS = 4;
 
 public:
-    static constexpr int TILE_SIZE = 50;
-    static constexpr int VERTS_IN_QUAD = 4;
 
-    // Get the time limit of the level
-    float getTimeLimit();
+	const int TILE_SIZE = 50;
+	const int VERTS_IN_QUAD = 4;
 
-    // Get the player's starting position
-    sf::Vector2f getStartPosition();
+	float getTimeLimit();
 
-    // Load the next level and fill vertex array
-    int** nextLevel(sf::VertexArray& rVaLevel);
+	Vector2f getStartPosition();
 
-    // Get current level's tile dimensions
-    sf::Vector2i getLevelSize();
+	int** nextLevel(VertexArray& rVaLevel);
 
-    // Get current level number
-    int getCurrentLevel();
+	Vector2i getLevelSize();
+
+	int getCurrentLevel();
+
 };
