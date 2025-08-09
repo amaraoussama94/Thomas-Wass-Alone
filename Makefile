@@ -127,12 +127,12 @@ $(SFML_INSTALL_DIR)/lib/libsfml-graphics.a $(SFML_INSTALL_DIR)/bin/sfml-graphics
 		$(CMAKE_FLAGS) 
 	$(MAKE_PROGRAM) -C $(SFML_BUILD_DIR)
 	$(MAKE_PROGRAM) -C $(SFML_BUILD_DIR) install
-	@echo "Contents of SFML install bin directory:"
-	if [[ "$(uname)" == "Linux" ]]; then
-		ls -l $(SFML_INSTALL_DIR)/lib || echo "No .so files found"
-	else
-		ls -l $(SFML_INSTALL_DIR)/bin || echo "No DLLs found"
-	fi
+	@echo "Contents of SFML install directory:"
+	@sh -c "if [ \"$(UNAME_S)\" = \"Linux\" ]; then \
+		ls -l $(SFML_INSTALL_DIR)/lib || echo 'No .so files found'; \
+	else \
+		ls -l $(SFML_INSTALL_DIR)/bin || echo 'No DLLs found'; \
+	fi"
 
 check-shell:
 ifeq ($(findstring MINGW,$(UNAME_S)),MINGW)
