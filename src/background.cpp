@@ -1,4 +1,4 @@
-#include "Background.hpp"
+#include "background.hpp"
 
 Background::Background()
     : m_BackgroundTexture(TextureHolder::GetTexture("graphics/background.png")),
