@@ -52,23 +52,31 @@ jobs:
             libgl1-mesa-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libfreetype6-dev
 
       # === Extract SFML version from submodule CMakeLists.txt ===
-      - name: Extract SFML version
+      # Temporarily disabled for SFML 2.5.1 compatibility
+      # - name: Extract SFML version
+      #   id: sfml
+      #   run: |
+      #     SFML_CMAKE="external/SFML/CMakeLists.txt"
+      #     if [[ ! -f "$SFML_CMAKE" ]]; then
+      #       echo " SFML CMakeLists.txt not found at $SFML_CMAKE"
+      #       exit 1
+      #     fi
+      #     
+      #     VERSION=$(grep -Po '(?<=project\(SFML VERSION )[^)]+(?=\))' "$SFML_CMAKE")
+      #     
+      #     if [[ -z "$VERSION" ]]; then
+      #       echo " Failed to extract SFML version from $SFML_CMAKE"
+      #       exit 1
+      #     fi
+      #     
+      #     echo " Detected SFML version: $VERSION"
+      #     echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Set SFML version manually
         id: sfml
         run: |
-          SFML_CMAKE="external/SFML/CMakeLists.txt"
-          if [[ ! -f "$SFML_CMAKE" ]]; then
-            echo " SFML CMakeLists.txt not found at $SFML_CMAKE"
-            exit 1
-          fi
-
-          VERSION=$(grep -Po '(?<=project\(SFML VERSION )[^)]+(?=\))' "$SFML_CMAKE")
-
-          if [[ -z "$VERSION" ]]; then
-            echo " Failed to extract SFML version from $SFML_CMAKE"
-            exit 1
-          fi
-
-          echo " Detected SFML version: $VERSION"
+          VERSION="2.5.1"
+          echo "Using hardcoded SFML version: $VERSION"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Build project
