@@ -1,6 +1,6 @@
 # === CONFIGURATION ===
 # Sets the name of your final executable
-PROJECT_NAME = Thomas
+PROJECT_NAME = Thomas_was_Alone
 SRC_DIR = src
 INC_DIR = include
 BUILD_DIR = build
