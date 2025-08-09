@@ -194,6 +194,17 @@ jobs:
           # Copy fonts to both
           cp -r fonts release/Thomas_was_Alone-linux/
           cp -r fonts release/Thomas_was_Alone-windows/
+           # Copy graphics to both
+          cp -r graphics release/Thomas_was_Alone-linux/ || echo "No graphics folder"
+          cp -r graphics release/Thomas_was_Alone-windows/ || echo "No graphics folder"
+
+          # Copy sounds to both
+          cp -r sounds release/Thomas_was_Alone-linux/ || echo "No sounds folder"
+          cp -r sounds release/Thomas_was_Alone-windows/ || echo "No sounds folder"
+
+          # Copy levels to both
+          cp -r levels release/Thomas_was_Alone-linux/ || echo "No levels folder"
+          cp -r levels release/Thomas_was_Alone-windows/ || echo "No levels folder"
 
       - name: Create zip archives
         run: |
