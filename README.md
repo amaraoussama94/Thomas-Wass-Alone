@@ -26,28 +26,43 @@ A minimalist 2D platformer inspired by *Thomas Was Alone*, built in C++ using SF
 | Bob - Jump              | `Up Arrow`         |
 | Bob - Move              | `Left` / `Right`   |
 
----
+
 ## 🧩 Project Structure
 
 The codebase is organized for clarity, modularity, and ease of extension. Here's a breakdown of the main directories and files:
 
 Thomas-Wass-Alone/ 
+
 ├── src/ # Core source files 
+
 │ ├── Engine/ # Game engine modules (input, rendering, physics) 
+
 │ ├── Entities/ # Player classes (Thomas, Bob) and shared logic 
+
 │ ├── Levels/ # Level loading, parsing, and management 
+
 │ ├── UI/ # HUD, menus, and screen transitions 
+
 │ └── main.cpp # Entry point 
+
 ├── assets/ # Textures, sounds, fonts 
+
 ├── images/ # Character and environment sprites 
+
 ├── audio/ # Sound effects and music 
+
 └── levels/ # Text-based level files 
+
 ├── include/ # Header files 
+
 ├── Makefile # Build instructions for Linux/windows 
+
 ├── CMakeLists.txt # Optional CMake build config 
+
 ├── README.md # Project documentation 
+
 └── LICENSE # MIT License
----
+
 
 ## 🚀 Getting Started
 
