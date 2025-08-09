@@ -1,136 +1,158 @@
 #include "PlayableCharacter.hpp"
-#include "logger.hpp"
 
-void PlayableCharacter::spawn(sf::Vector2f startPosition, float gravity)
+void PlayableCharacter::spawn(Vector2f startPosition, float gravity)
 {
-    m_Position = startPosition;
-    m_Gravity = gravity;
-    m_Sprite.setPosition(m_Position);
+	// Place the player at the starting point
+	m_Position.x = startPosition.x;
+	m_Position.y = startPosition.y;
 
-    Logger::Log("PlayableCharacter", "Spawned at (" +
-        std::to_string(startPosition.x) + ", " +
-        std::to_string(startPosition.y) + ") with gravity = " +
-        std::to_string(gravity));
+	// Initialize the gravity
+	m_Gravity = gravity;
+
+	// Move the sprite in to position
+	m_Sprite.setPosition(m_Position);
+
 }
 
 void PlayableCharacter::update(float elapsedTime)
 {
-    if (m_RightPressed) {
-        m_Position.x += m_Speed * elapsedTime;
-        Logger::Log("PlayableCharacter", "Moving right → X = " + std::to_string(m_Position.x));
-    }
 
-    if (m_LeftPressed) {
-        m_Position.x -= m_Speed * elapsedTime;
-        Logger::Log("PlayableCharacter", "Moving left ← X = " + std::to_string(m_Position.x));
-    }
+	if (m_RightPressed)
+	{
+		m_Position.x += m_Speed * elapsedTime;
+	}
 
-    if (m_IsJumping) {
-        m_TimeThisJump += elapsedTime;
+	if (m_LeftPressed)
+	{
+		m_Position.x -= m_Speed * elapsedTime;
+	}
 
-        if (m_TimeThisJump < m_JumpDuration) {
-            m_Position.y -= m_Gravity * 2 * elapsedTime;
-            Logger::Log("PlayableCharacter", "Jumping ↑ Y = " +
-                std::to_string(m_Position.y) +
-                ", Time = " + std::to_string(m_TimeThisJump));
-        } else {
-            m_IsJumping = false;
-            m_IsFalling = true;
-            Logger::Log("PlayableCharacter", "Jump ended → falling begins");
-        }
-    }
 
-    if (m_IsFalling) {
-        m_Position.y += m_Gravity * elapsedTime;
-        Logger::Log("PlayableCharacter", "Falling ↓ Y = " + std::to_string(m_Position.y));
-    }
+	// Handle Jumping
+	if (m_IsJumping)
+	{
+		// Update how long the jump has been going
+		m_TimeThisJump += elapsedTime;
 
-    sf::FloatRect r = m_Sprite.getGlobalBounds();
+		// Is the jump going upwards
+		if (m_TimeThisJump < m_JumpDuration)
+		{
+			// Move up at twice gravity
+			m_Position.y -= m_Gravity * 2 * elapsedTime;
+		}
+		else
+		{
+			m_IsJumping = false;
+			m_IsFalling = true;
+		}
 
-    m_Feet.position.x = r.position.x + 3;
-    m_Feet.position.y = r.position.y + r.size.y - 1;
-    m_Feet.size.x = r.size.x - 6;
-    m_Feet.size.y = 1;
+	}
 
-    m_Head.position.x = r.position.x;
-    m_Head.position.y = r.position.y + (r.size.y * 0.3f);
-    m_Head.size.x = r.size.x;
-    m_Head.size.y = 1;
+	// Apply gravity
+	if (m_IsFalling)
+	{
+		m_Position.y += m_Gravity * elapsedTime;
+	}
 
-    m_Right.position.x = r.position.x + r.size.x - 2;
-    m_Right.position.y = r.position.y + r.size.y * 0.35f;
-    m_Right.size.x = 1;
-    m_Right.size.y = r.size.y * 0.3f;
+	// Update the rect for all body parts
+	FloatRect r = getPosition();
 
-    m_Left.position.x = r.position.x;
-    m_Left.position.y = r.position.y + r.size.y * 0.5f;
-    m_Left.size.x = 1;
-    m_Left.size.y = r.size.y * 0.3f;
 
-    m_Sprite.setPosition(m_Position);
+	// Feet
+	m_Feet.left = r.left + 3;
+	m_Feet.top = r.top + r.height - 1;
+	m_Feet.width = r.width - 6;
+	m_Feet.height = 1;
 
-    Logger::Log("PlayableCharacter", "Updated body rects & sprite position → X = " +
-        std::to_string(m_Position.x) + ", Y = " +
-        std::to_string(m_Position.y));
+	// Head
+	m_Head.left = r.left;
+	m_Head.top = r.top + (r.height * .3);
+	m_Head.width = r.width;
+	m_Head.height = 1;
+
+	// Right
+	m_Right.left = r.left + r.width - 2;
+	m_Right.top = r.top + r.height * .35;
+	m_Right.width = 1;
+	m_Right.height = r.height * .3;
+
+	// Left
+	m_Left.left = r.left;
+	m_Left.top = r.top + r.height * .5;
+	m_Left.width = 1;
+	m_Left.height = r.height * .3;
+
+	// Move the sprite into position
+	m_Sprite.setPosition(m_Position);
+
 }
 
-sf::FloatRect PlayableCharacter::getPosition()
+FloatRect PlayableCharacter::getPosition()
 {
-    Logger::Log("PlayableCharacter", "Fetching sprite global bounds");
-    return m_Sprite.getGlobalBounds();
+	return m_Sprite.getGlobalBounds();
 }
 
-sf::Vector2f PlayableCharacter::getCenter()
+Vector2f PlayableCharacter::getCenter()
 {
-    sf::FloatRect bounds = m_Sprite.getGlobalBounds();
-    sf::Vector2f center(
-        m_Position.x + bounds.size.x / 2,
-        m_Position.y + bounds.size.y / 2
-    );
-    Logger::Log("PlayableCharacter", "Center point → (" +
-        std::to_string(center.x) + ", " +
-        std::to_string(center.y) + ")");
-    return center;
+	return Vector2f(
+		m_Position.x + m_Sprite.getGlobalBounds().width / 2,
+		m_Position.y + m_Sprite.getGlobalBounds().height / 2
+		);
 }
 
-sf::FloatRect PlayableCharacter::getFeet()  { return m_Feet; }
-sf::FloatRect PlayableCharacter::getHead()  { return m_Head; }
-sf::FloatRect PlayableCharacter::getLeft()  { return m_Left; }
-sf::FloatRect PlayableCharacter::getRight() { return m_Right; }
-sf::Sprite PlayableCharacter::getSprite()   { return m_Sprite; }
+FloatRect PlayableCharacter::getFeet()
+{
+	return m_Feet;
+}
+
+FloatRect PlayableCharacter::getHead()
+{
+	return m_Head;
+}
+
+FloatRect PlayableCharacter::getLeft()
+{
+	return m_Left;
+}
+
+FloatRect PlayableCharacter::getRight()
+{
+	return m_Right;
+}
+
+Sprite PlayableCharacter::getSprite()
+{
+	return m_Sprite;
+}
+
+
 
 void PlayableCharacter::stopFalling(float position)
 {
-    sf::FloatRect bounds = getPosition();
-    m_Position.y = position - bounds.size.y;
-    m_Sprite.setPosition(m_Position);
-    m_IsFalling = false;
-
-    Logger::Log("PlayableCharacter", "Stopped falling → Y = " + std::to_string(m_Position.y));
+	m_Position.y = position - getPosition().height;
+	m_Sprite.setPosition(m_Position);
+	m_IsFalling = false;
 }
 
 void PlayableCharacter::stopRight(float position)
 {
-    sf::FloatRect bounds = m_Sprite.getGlobalBounds();
-    m_Position.x = position - bounds.size.x;
-    m_Sprite.setPosition(m_Position);
-
-    Logger::Log("PlayableCharacter", "Stopped moving right → X = " + std::to_string(m_Position.x));
+	
+	m_Position.x = position - m_Sprite.getGlobalBounds().width;
+	m_Sprite.setPosition(m_Position);
 }
 
 void PlayableCharacter::stopLeft(float position)
 {
-    sf::FloatRect bounds = m_Sprite.getGlobalBounds();
-    m_Position.x = position + bounds.size.x;
-    m_Sprite.setPosition(m_Position);
-
-    Logger::Log("PlayableCharacter", "Stopped moving left ← X = " + std::to_string(m_Position.x));
+	m_Position.x = position + m_Sprite.getGlobalBounds().width;
+	m_Sprite.setPosition(m_Position);
 }
 
 void PlayableCharacter::stopJump()
 {
-    m_IsJumping = false;
-    m_IsFalling = true;
-
-    Logger::Log("PlayableCharacter", "Jump interrupted → falling resumes");
+	// Stop a jump early 
+	m_IsJumping = false;
+	m_IsFalling = true;
 }
+
+
+

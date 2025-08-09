@@ -1,135 +1,168 @@
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include "TextureHolder.hpp"
+#include <sstream>
 #include <fstream>
 #include "LevelManager.hpp"
-#include "Logger.hpp"  
 
-int** LevelManager::nextLevel(sf::VertexArray& rVaLevel)
+using namespace sf;
+using namespace std;
+
+int** LevelManager::nextLevel(VertexArray& rVaLevel)
 {
-    m_CurrentLevel++;
-    if (m_CurrentLevel > m_NumLevels)
-        m_CurrentLevel = 1;
+	m_LevelSize.x = 0;
+	m_LevelSize.y = 0;
 
-    std::string levelPath = "levels/level" + std::to_string(m_CurrentLevel) + ".txt";
-    Logger::Log("LevelManager", "Loading level file: " + levelPath);
+	// Get the next level
+	m_CurrentLevel++;
+	if (m_CurrentLevel > NUM_LEVELS)
+	{
+		m_CurrentLevel = 1;
+		m_TimeModifier -= .1f;
+	}
 
-    std::ifstream inputFile(levelPath);
-    if (!inputFile.is_open())
-    {
-        Logger::Log("LevelManager", "ERROR: Failed to open file " + levelPath);
-        return nullptr;
-    }
+	// Load the appropriate level from a text file
+	string levelToLoad;
+	switch (m_CurrentLevel)
+	{
+	
+	case 1:
+		levelToLoad = "levels/level1.txt";
+		m_StartPosition.x = 100;
+		m_StartPosition.y = 100;
+		m_BaseTimeLimit = 30.0f;
+		break;
 
-    std::string line;
-    std::vector<std::string> levelLines;
+	case 2:
+		levelToLoad = "levels/level2.txt";
+		m_StartPosition.x = 100;
+		m_StartPosition.y = 3600;
+		m_BaseTimeLimit = 100.0f;
+		break;
 
-    while (std::getline(inputFile, line))
-    {
-        levelLines.push_back(line);
-    }
-    inputFile.close();
+	case 3:
+		levelToLoad = "levels/level3.txt";
+		m_StartPosition.x = 1250;
+		m_StartPosition.y = 0;
+		m_BaseTimeLimit = 30.0f;
+		break;
 
-    m_LevelSize.y = levelLines.size();
-    m_LevelSize.x = levelLines.empty() ? 0 : levelLines[0].length();
-    Logger::Log("LevelManager", "Parsed level size: " + std::to_string(m_LevelSize.x) + "x" + std::to_string(m_LevelSize.y));
+	case 4:
+		levelToLoad = "levels/level4.txt";
+		m_StartPosition.x = 50;
+		m_StartPosition.y = 200;
+		m_BaseTimeLimit = 50.0f;
+		break;
 
-    int** levelArray = new int*[m_LevelSize.y];
-    for (int i = 0; i < m_LevelSize.y; ++i)
-    {
-        levelArray[i] = new int[m_LevelSize.x];
-    }
 
-    for (size_t y = 0; y < levelLines.size(); ++y)
-    {
-        std::string row = levelLines[y];
-        for (size_t x = 0; x < row.length(); ++x)
-        {
-            char cell = row[x];
-            switch (cell)
-            {
-                case '1':
-                    levelArray[y][x] = 1;
-                    Logger::Log("LevelManager", "Solid block at (" + std::to_string(x) + ", " + std::to_string(y) + ")");
-                    break;
-                case '2':
-                    levelArray[y][x] = 2;
-                    m_StartPosition.x = static_cast<float>(x * TILE_SIZE);
-                    m_StartPosition.y = static_cast<float>(y * TILE_SIZE);
-                    Logger::Log("LevelManager", "Spawn point at (" + std::to_string(x) + ", " + std::to_string(y) + ")");
-                    break;
-                default:
-                    levelArray[y][x] = 0;
-                    break;
-            }
-        }
-    }
+	}
 
-    rVaLevel.clear();
-    rVaLevel.setPrimitiveType(sf::PrimitiveType::Triangles);
-    Logger::Log("LevelManager", "Building geometry...");
+	ifstream inputFile(levelToLoad);
+	string s;
 
-    int solidTileCount = 0;
-    for (int y = 0; y < m_LevelSize.y; ++y)
-    {
-        for (int x = 0; x < m_LevelSize.x; ++x)
-        {
-            if (levelArray[y][x] == 1)
-            {
-                solidTileCount++;
+	// Count the number of rows in the file
+	while (getline(inputFile, s))
+	{
+		++m_LevelSize.y;
+	}
 
-                sf::Vector2f position(x * TILE_SIZE, y * TILE_SIZE);
+	// Store the length of the rows
+	m_LevelSize.x = s.length();
 
-                sf::Vector2f topLeft     = position;
-                sf::Vector2f topRight    = position + sf::Vector2f(TILE_SIZE, 0);
-                sf::Vector2f bottomLeft  = position + sf::Vector2f(0, TILE_SIZE);
-                sf::Vector2f bottomRight = position + sf::Vector2f(TILE_SIZE, TILE_SIZE);
+	// Go back to the start of the file
+	inputFile.clear();
+	inputFile.seekg(0, ios::beg);//moves the file cursor's position (where characters will be read from next) to the beginning of the file
 
-                sf::Vector2f texTopLeft     = {0.f, 0.f};
-                sf::Vector2f texTopRight    = {TILE_SIZE, 0.f};
-                sf::Vector2f texBottomLeft  = {0.f, TILE_SIZE};
-                sf::Vector2f texBottomRight = {TILE_SIZE, TILE_SIZE};
+	// Prepare the 2d array to hold the int values from the file
+	int** arrayLevel = new int*[m_LevelSize.y];
+	for (int i = 0; i < m_LevelSize.y; ++i)
+	{
+		// Add a new array into each array element
+		arrayLevel[i] = new int[m_LevelSize.x];
+	}
 
-                sf::Vertex v1, v2, v3, v4, v5, v6;
-                v1.position = topLeft;     v1.texCoords = texTopLeft;
-                v2.position = topRight;    v2.texCoords = texTopRight;
-                v3.position = bottomRight; v3.texCoords = texBottomRight;
+	// Loop through the file and store all the values in the 2d array
+	string row;
+	int y = 0;
+	while (inputFile >> row)
+	{
+		for (int x = 0; x < row.length(); x++) {
 
-                v4.position = topLeft;     v4.texCoords = texTopLeft;
-                v5.position = bottomRight; v5.texCoords = texBottomRight;
-                v6.position = bottomLeft;  v6.texCoords = texBottomLeft;
+			const char val = row[x];
+			arrayLevel[y][x] = atoi(&val);
+		}
 
-                rVaLevel.append(v1);
-                rVaLevel.append(v2);
-                rVaLevel.append(v3);
-                rVaLevel.append(v4);
-                rVaLevel.append(v5);
-                rVaLevel.append(v6);
-            }
-        }
-    }
+		y++;
+	}
 
-    Logger::Log("LevelManager", "Geometry built for " + std::to_string(solidTileCount) + " solid tiles");
+	// close the file
+	inputFile.close();
 
-    m_BaseTimeLimit = m_LevelSize.y * 10.0f;
-    Logger::Log("LevelManager", "Base time limit set: " + std::to_string(m_BaseTimeLimit));
+	// What type of primitive are we using?
+	rVaLevel.setPrimitiveType(Quads);
 
-    return levelArray;
+	// Set the size of the vertex array
+	rVaLevel.resize(m_LevelSize.x * m_LevelSize.y * VERTS_IN_QUAD);
+
+	// Start at the beginning of the vertex array
+	int currentVertex = 0;
+
+	for (int x = 0; x < m_LevelSize.x; x++)
+	{
+		for (int y = 0; y < m_LevelSize.y; y++)
+		{
+			// Position each vertex in the current quad
+			rVaLevel[currentVertex + 0].position = 
+				Vector2f(x * TILE_SIZE, y * TILE_SIZE);
+
+			rVaLevel[currentVertex + 1].position = 
+				Vector2f((x * TILE_SIZE) + TILE_SIZE, y * TILE_SIZE);
+
+			rVaLevel[currentVertex + 2].position = 
+				Vector2f((x * TILE_SIZE) + TILE_SIZE, (y * TILE_SIZE) + TILE_SIZE);
+
+			rVaLevel[currentVertex + 3].position = 
+				Vector2f((x * TILE_SIZE), (y * TILE_SIZE) + TILE_SIZE);
+
+			// Which tile from the sprite sheet should we use
+			int verticalOffset = arrayLevel[y][x] * TILE_SIZE;
+
+			rVaLevel[currentVertex + 0].texCoords = 
+				Vector2f(0, 0 + verticalOffset);
+
+			rVaLevel[currentVertex + 1].texCoords = 
+				Vector2f(TILE_SIZE, 0 + verticalOffset);
+
+			rVaLevel[currentVertex + 2].texCoords = 
+				Vector2f(TILE_SIZE, TILE_SIZE + verticalOffset);
+
+			rVaLevel[currentVertex + 3].texCoords = 
+				Vector2f(0, TILE_SIZE + verticalOffset);
+
+			// Position ready for the next four vertices
+			currentVertex = currentVertex + VERTS_IN_QUAD;
+		}
+	}
+
+	return arrayLevel;
 }
 
-float LevelManager::getTimeLimit()
+Vector2i LevelManager::getLevelSize()
 {
-    return m_BaseTimeLimit * m_TimeModifier;
-}
-
-sf::Vector2f LevelManager::getStartPosition()
-{
-    return m_StartPosition;
-}
-
-sf::Vector2i LevelManager::getLevelSize()
-{
-    return m_LevelSize;
+	return m_LevelSize;
 }
 
 int LevelManager::getCurrentLevel()
 {
-    return m_CurrentLevel;
+	return m_CurrentLevel;
+}
+
+float LevelManager::getTimeLimit()
+{
+	return m_BaseTimeLimit * m_TimeModifier;
+
+}
+Vector2f LevelManager::getStartPosition()
+{
+	return m_StartPosition;
 }

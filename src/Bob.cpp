@@ -2,17 +2,19 @@
 #include "TextureHolder.hpp"
 
 Bob::Bob()
-    : PlayableCharacter(TextureHolder::GetTexture("graphics/bob.png"))
 {
-    m_JumpDuration = .25;
-}
+	// Associate a texture with the sprite
+	m_Sprite = Sprite(TextureHolder::GetTexture(
+		"graphics/bob.png"));
 
+	m_JumpDuration = .25;
+}
 
 bool Bob::handleInput()
 {
 	m_JustJumped = false;
 
-	if (Keyboard::isKeyPressed(Keyboard::Key::Up))
+	if (Keyboard::isKeyPressed(Keyboard::Up))
 	{
 
 		// Start a jump if not already jumping
@@ -31,7 +33,7 @@ bool Bob::handleInput()
 		m_IsFalling = true;
 
 	}
-	if (Keyboard::isKeyPressed(Keyboard::Key::Left))
+	if (Keyboard::isKeyPressed(Keyboard::Left))
 	{
 		m_LeftPressed = true;
 
@@ -42,7 +44,7 @@ bool Bob::handleInput()
 	}
 
 
-	if (Keyboard::isKeyPressed(Keyboard::Key::Right))
+	if (Keyboard::isKeyPressed(Keyboard::Right))
 	{
 
 		m_RightPressed = true;;

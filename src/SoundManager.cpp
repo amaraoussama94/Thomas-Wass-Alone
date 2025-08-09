@@ -1,85 +1,102 @@
-#include "SoundManager.hpp"
-#include <iostream>
-
+ #include "SoundManager.hpp"
+#include <SFML/Audio.hpp>
+using namespace sf;
 SoundManager::SoundManager()
 {
-    if (!m_FireBuffer.loadFromFile("audio/fire.wav") ||
-        !m_FallInFireBuffer.loadFromFile("audio/fallinfire.wav") ||
-        !m_FallInWaterBuffer.loadFromFile("audio/fallinwater.wav") ||
-        !m_JumpBuffer.loadFromFile("audio/jump.wav") ||
-        !m_ReachGoalBuffer.loadFromFile("audio/reachgoal.wav"))
-    {
-        std::cerr << "Error loading one or more sound files" << std::endl;
-        return;
-    }
-
-    // Dynamically allocate sf::Sound with correct buffers
-    m_Fire1Sound = new Sound(m_FireBuffer);
-    m_Fire2Sound = new Sound(m_FireBuffer);
-    m_Fire3Sound = new Sound(m_FireBuffer);
-    m_FallInFireSound = new Sound(m_FallInFireBuffer);
-    m_FallInWaterSound = new Sound(m_FallInWaterBuffer);
-    m_JumpSound = new Sound(m_JumpBuffer);
-    m_ReachGoalSound = new Sound(m_ReachGoalBuffer);
-
-    // Enable looping for fire sounds
-    m_Fire1Sound->setLooping(true);
-    m_Fire2Sound->setLooping(true);
-    m_Fire3Sound->setLooping(true);
-}
-
-SoundManager::~SoundManager()
-{
-    delete m_Fire1Sound;
-    delete m_Fire2Sound;
-    delete m_Fire3Sound;
-    delete m_FallInFireSound;
-    delete m_FallInWaterSound;
-    delete m_JumpSound;
-    delete m_ReachGoalSound;
+    // Load the sound in to the buffers
+    m_FireBuffer.loadFromFile("sound/fire1.wav");
+    m_FallInFireBuffer.loadFromFile("sound/fallinfire.wav");
+    m_FallInWaterBuffer.loadFromFile("sound/fallinwater.wav");
+    m_JumpBuffer.loadFromFile("sound/jump.wav");
+    m_ReachGoalBuffer.loadFromFile("sound/reachgoal.wav");
+    // Associate the sounds with the buffers
+    m_Fire1Sound.setBuffer(m_FireBuffer);
+    m_Fire2Sound.setBuffer(m_FireBuffer);
+    m_Fire3Sound.setBuffer(m_FireBuffer);
+    m_FallInFireSound.setBuffer(m_FallInFireBuffer);
+    m_FallInWaterSound.setBuffer(m_FallInWaterBuffer);
+    m_JumpSound.setBuffer(m_JumpBuffer);
+    m_ReachGoalSound.setBuffer(m_ReachGoalBuffer);
+    // When the player is 50 pixels away sound is full volume
+    float minDistance = 150;
+    // The sound reduces steadily as the player moves further away
+    float attenuation = 15;
+    // Set all the attenuation levels
+    m_Fire1Sound.setAttenuation(attenuation);
+    m_Fire2Sound.setAttenuation(attenuation);
+    m_Fire3Sound.setAttenuation(attenuation);
+    // Set all the minimum distance levels
+    m_Fire1Sound.setMinDistance(minDistance);
+    m_Fire2Sound.setMinDistance(minDistance);
+    m_Fire3Sound.setMinDistance(minDistance);
+    // Loop all the fire sounds
+    // when they are played
+    m_Fire1Sound.setLoop(true);
+    m_Fire2Sound.setLoop(true);
+    m_Fire3Sound.setLoop(true);
 }
 
 void SoundManager::playFire(Vector2f emitterLocation, Vector2f listenerLocation)
 {
-    Listener::setPosition(Vector3f(listenerLocation.x, listenerLocation.y, 0.0f));
-    Vector3f emitterPos(emitterLocation.x, emitterLocation.y, 0.0f);
-
-    switch (m_NextSound)
+    // Where is the listener? Thomas.
+    Listener::setPosition(listenerLocation.x,listenerLocation.y, 0.0f);
+    switch(m_NextSound)
     {
         case 1:
-            m_Fire1Sound->setPosition(emitterPos);
-            m_Fire1Sound->play();
-            m_NextSound = 2;
-            break;
+        // Locate/move the source of the sound
+        m_Fire1Sound.setPosition(emitterLocation.x,
+        emitterLocation.y, 0.0f);
+        if (m_Fire1Sound.getStatus() == Sound::Status::Stopped)
+        {
+        // Play the sound, if its not already
+            m_Fire1Sound.play();
+        }
+        break;
         case 2:
-            m_Fire2Sound->setPosition(emitterPos);
-            m_Fire2Sound->play();
-            m_NextSound = 3;
-            break;
+        // Do the same as previous for the second sound
+        m_Fire2Sound.setPosition(emitterLocation.x,
+        emitterLocation.y, 0.0f);
+        if (m_Fire2Sound.getStatus() == Sound::Status::Stopped)
+        {
+            m_Fire2Sound.play();
+        }
+        break;
         case 3:
-            m_Fire3Sound->setPosition(emitterPos);
-            m_Fire3Sound->play();
-            m_NextSound = 1;
-            break;
+        // Do the same as previous for the third sound
+        m_Fire3Sound.setPosition(emitterLocation.x,
+        emitterLocation.y, 0.0f);
+        if (m_Fire3Sound.getStatus() == Sound::Status::Stopped)
+        {
+            m_Fire3Sound.play();
+        }
+        break;
+    }
+    // Increment to the next fire sound
+    m_NextSound++;
+    // Go back to 1 when the third sound has been started
+    if (m_NextSound > 3)
+    {
+        m_NextSound = 1;
     }
 }
 
 void SoundManager::playFallInFire()
 {
-    m_FallInFireSound->play();
+    m_FallInFireSound.setRelativeToListener(true);//play a "normal" sound, sound effect is not spatialized, making the sound effect "normal", not directional
+    m_FallInFireSound.play();
 }
-
 void SoundManager::playFallInWater()
 {
-    m_FallInWaterSound->play();
+    m_FallInWaterSound.setRelativeToListener(true);
+    m_FallInWaterSound.play();
 }
-
 void SoundManager::playJump()
 {
-    m_JumpSound->play();
+    m_JumpSound.setRelativeToListener(true);
+    m_JumpSound.play();
 }
-
 void SoundManager::playReachGoal()
 {
-    m_ReachGoalSound->play();
+    m_ReachGoalSound.setRelativeToListener(true);
+    m_ReachGoalSound.play();
 }

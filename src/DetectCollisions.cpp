@@ -1,89 +1,125 @@
 #include "Engine.hpp"
-#include <SFML/Graphics/Rect.hpp> // For FloatRect and findIntersection
-#include "logger.hpp"
 
 bool Engine::detectCollisions(PlayableCharacter& character)
 {
-    Logger::Log("Collisions","Engine: Starting collision detection");
-    bool reachedGoal = false;
+	bool reachedGoal = false;
+	// Make a rect for all his parts
+	FloatRect detectionZone = character.getPosition();
 
-    sf::FloatRect detectionZone = character.getPosition();
-    Logger::Log("Collisions","Engine: detectionZone retrieved");
+	// Make a FloatRect to test each block
+	FloatRect block;
 
-    sf::FloatRect block({0.f, 0.f}, {TILE_SIZE, TILE_SIZE});
-    Logger::Log("Collisions","Engine: initialized block for collision");
+	block.width = TILE_SIZE;
+	block.height = TILE_SIZE;
 
-    int startX = static_cast<int>(detectionZone.position.x / TILE_SIZE) - 1;
-    int startY = static_cast<int>(detectionZone.position.y / TILE_SIZE) - 1;
-    int endX   = static_cast<int>(detectionZone.position.x / TILE_SIZE) + 2;
-    int endY   = static_cast<int>(detectionZone.position.y / TILE_SIZE) + 3;
-    Logger::Log("Collisions","Engine: detection bounds calculated");
+	// Build a zone around thomas to detect collisions
+	int startX = (int)(detectionZone.left / TILE_SIZE) - 1;
+	int startY = (int)(detectionZone.top / TILE_SIZE) - 1;
+	int endX = (int)(detectionZone.left / TILE_SIZE) + 2;
 
-    startX = std::max(startX, 0);
-    startY = std::max(startY, 0);
-    endX = std::min(endX, static_cast<int>(m_LM.getLevelSize().x));
-    endY = std::min(endY, static_cast<int>(m_LM.getLevelSize().y));
-    Logger::Log("Collisions","Engine: clamped detection bounds");
+	// Thomas is quite tall so check a few tiles vertically
+	int endY = (int)(detectionZone.top / TILE_SIZE) + 3;
 
-    sf::FloatRect level({0.f, 0.f}, {
-        m_LM.getLevelSize().x * TILE_SIZE,
-        m_LM.getLevelSize().y * TILE_SIZE });
+	// Make sure we don't test positions lower than zero
+	// Or higher than the end of the array
+	if (startX < 0)startX = 0;
+	if (startY < 0)startY = 0;
+	if (endX >= m_LM.getLevelSize().x)
+		endX = m_LM.getLevelSize().x;
+	if (endY >= m_LM.getLevelSize().y)
+		endY = m_LM.getLevelSize().y;
 
-    if (!detectionZone.findIntersection(level).has_value())
-    {
-        Logger::Log("Collisions","Engine: Out of bounds — respawning character");
-        character.spawn(m_LM.getStartPosition(), GRAVITY);
-    }
+	// Has the character fallen out of the map?
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!This can be part of level manager!!!!!!!!!!!!!!!!!!!!!!!!
+	FloatRect level(0, 0, m_LM.getLevelSize().x * TILE_SIZE, m_LM.getLevelSize().y * TILE_SIZE);
+	if (!character.getPosition().intersects(level))
+	{
+		// respawn the character
+		character.spawn(m_LM.getStartPosition(), GRAVITY);
+	}
 
-    for (int x = startX; x < endX; ++x)
-    {
-        for (int y = startY; y < endY; ++y)
-        {
-            block.position.x = x * TILE_SIZE;
-            block.position.y = y * TILE_SIZE;
-            int tile = m_ArrayLevel[y][x];
+	for (int x = startX; x < endX; x++)
+	{
+		for (int y = startY; y < endY; y++)
+		{
+			// Initialize the starting position of the current block
+			block.left = x * TILE_SIZE;
+			block.top = y * TILE_SIZE;
 
-            if ((tile == 2 || tile == 3) &&
-                character.getHead().findIntersection(block).has_value())
-            {
-                Logger::Log("Collisions","Engine: Head collided with hazard at (" +
-                    std::to_string(x) + ", " + std::to_string(y) + ")");
-                character.spawn(m_LM.getStartPosition(), GRAVITY);
+			// Has character been burnt or drowned?
+			// Use head as this allows him to sink a bit
+			if (m_ArrayLevel[y][x] == 2 || m_ArrayLevel[y][x] == 3)//determines whether the current position being checked is a fire or a water
+			{
+				if (character.getHead().intersects(block))
+				{
+					character.spawn(m_LM.getStartPosition(), GRAVITY);//rebirth
+					// Which sound should be played?
+					if (m_ArrayLevel[y][x] == 2)// Fire, ouch!
+					{
+						// Play a sound
+						m_SM.playFallInFire();
 
-                if (tile == 2) m_SM.playFallInFire();
-                else m_SM.playFallInWater();
-            }
+					}
+					else // Water
+					{
+						// Play a sound
+						m_SM.playFallInWater();
+					}
+				}
+			}
 
-            if (tile == 1)
-            {
-                if (character.getRight().findIntersection(block).has_value())
-                    Logger::Log("Collisions","Engine: Right wall collision at X = " + std::to_string(block.position.x));
-                else if (character.getLeft().findIntersection(block).has_value())
-                    Logger::Log("Collisions","Engine: Left wall collision at X = " + std::to_string(block.position.x));
 
-                if (character.getFeet().findIntersection(block).has_value())
-                    Logger::Log("Collisions","Engine: Landed on ground at Y = " + std::to_string(block.position.y));
-                else if (character.getHead().findIntersection(block).has_value())
-                    Logger::Log("Collisions","Engine: Hit ceiling, stopping jump");
-            }
+			// Is character colliding with a regular block
+			if (m_ArrayLevel[y][x] == 1)
+			{
 
-            if (!m_PS.running() &&
-                (tile == 2 || tile == 3) &&
-                character.getFeet().findIntersection(block).has_value())
-            {
-                Logger::Log("Collisions","Engine: Triggering particle effect at feet");
-                m_PS.emitParticles(character.getCenter());
-            }
+				if (character.getRight().intersects(block))
+				{
+					character.stopRight(block.left);
+				}
+				else if (character.getLeft().intersects(block))
+				{
+					character.stopLeft(block.left);
+				}
 
-            if (tile == 4)
-            {
-                reachedGoal = true;
-                Logger::Log("Collisions","Engine: Goal reached at (" +
-                    std::to_string(x) + ", " + std::to_string(y) + ")");
-            }
-        }
-    }
 
-    Logger::Log("Collisions","Engine: Collision detection complete");
-    return reachedGoal;
+				if (character.getFeet().intersects(block))
+				{
+					character.stopFalling(block.top);
+				}
+				else if (character.getHead().intersects(block))
+				{
+					character.stopJump();
+				}
+			}
+			
+			// Have the characters' feet touched fire or water?
+			// If so, start a particle effect
+			// Make sure this is the first time we have detected this
+			// by seeing if an effect is already running
+			if (!m_PS.running())
+			{
+				if (m_ArrayLevel[y][x] == 2 || m_ArrayLevel[y][x] == 3)
+				{
+					if (character.getFeet().intersects(block))//checks whether the character's feet are in contact with it.
+					{
+						// position and start the particle system
+						m_PS.emitParticles(character.getCenter());
+					}
+				}
+			}
+
+			// Has the character reached the goal?
+			if (m_ArrayLevel[y][x] == 4)
+			{
+				// Character has reached the goal
+				reachedGoal = true;
+			}
+
+		}
+
+	}
+
+	// All done, return, wheteher or not a new level might be required
+	return reachedGoal;
 }
