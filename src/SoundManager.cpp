@@ -4,11 +4,11 @@ using namespace sf;
 SoundManager::SoundManager()
 {
     // Load the sound in to the buffers
-    m_FireBuffer.loadFromFile("sound/fire1.wav");
-    m_FallInFireBuffer.loadFromFile("sound/fallinfire.wav");
-    m_FallInWaterBuffer.loadFromFile("sound/fallinwater.wav");
-    m_JumpBuffer.loadFromFile("sound/jump.wav");
-    m_ReachGoalBuffer.loadFromFile("sound/reachgoal.wav");
+    m_FireBuffer.loadFromFile("sounds/fire1.wav");
+    m_FallInFireBuffer.loadFromFile("sounds/fallinfire.wav");
+    m_FallInWaterBuffer.loadFromFile("sounds/fallinwater.wav");
+    m_JumpBuffer.loadFromFile("sounds/jump.wav");
+    m_ReachGoalBuffer.loadFromFile("sounds/reachgoal.wav");
     // Associate the sounds with the buffers
     m_Fire1Sound.setBuffer(m_FireBuffer);
     m_Fire2Sound.setBuffer(m_FireBuffer);
