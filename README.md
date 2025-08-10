@@ -70,7 +70,7 @@ Thomas-Wass-Alone/
 
 - **C++17-compatible compiler**
 - **CMake ≥ 3.24**
-- **SFML 3.0.0** (included as a submodule)
+- **SFML 2.5.1** (included as a submodule)
 
 ### 🛠️ Build Instructions
 
@@ -83,18 +83,26 @@ cd Thomas-Wass-Alone
 make
 ./bin/Thomas_was_Alone
 ```
-### 🪟 Windows Build Instructions
+### 🪟 Windows Build Instructions (MSYS2 MINGW64)
 
-#### Option 1: Using MinGW (GCC)
+1. ✅ Install mingw-w64-x86_64-gcc, mingw-w64-x86_64-cmake ,mingw-w64-x86_64-make ,mingw-w64-x86_64-pkg-config ,mingw-w64-x86_64-freetype ,make
+2. ✅ git clone --recurse-submodules https://github.com/yourusername/Thomas-Wass-Alone.git
+3. ✅ under MSYS2 MINGW64
 
-1. ✅ Install [MinGW-w64](https://www.mingw-w64.org/) with GCC 14.2.0 or compatible
-2. ✅ Download the **SFML 3.0.0 MinGW package** from [SFML Downloads](https://www.sfml-dev.org/download/sfml/3.0.0/)
-3. ✅ Extract SFML and place it in your project directory (e.g., `external/SFML`)
-4. ✅ Add SFML's `include/` and `lib/` paths to your Makefile or compile command
-
-Example compile command:
 ```bash
-g++ src/*.cpp -Iexternal/SFML/include -Lexternal/SFML/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio-o Thomas_was_Alone.exe
+make run 
+```
+
+to clean build ( bin *.o )
+
+```bash
+make clean  
+```
+
+to clean all ( even sfml build  )
+
+```bash
+make clean-all 
 ```
 ## 🧩 Features of Thomas Was Late
 
