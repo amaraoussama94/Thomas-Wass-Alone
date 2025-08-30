@@ -1,4 +1,11 @@
- #pragma once
+/**
+ * @file SoundManager.hpp
+ * @brief Declaration of the SoundManager class for managing game sounds
+ * @date 2025-06-15
+ * @version 1.0
+ * @author Oussama amara
+ */
+#pragma once
 #include <SFML/Audio.hpp>
 using namespace sf;
 class SoundManager

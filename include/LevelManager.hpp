@@ -1,3 +1,10 @@
+/**
+ * @file LevelManager.hpp
+ * @brief Declaration of the LevelManager class, responsible for managing game levels
+ * @date 2025-06-15
+ * @version 1.0
+ * @author Oussama amara
+ */
 #pragma once
 
 #include <SFML/Graphics.hpp>

@@ -1,3 +1,10 @@
+/**
+ * @file TextureHolder.hpp
+ * @brief Declaration of the TextureHolder class for managing textures
+ * @date 2025-06-15
+ * @version 1.0
+ * @author Oussama amara
+ */
 #pragma once
 #ifndef TEXTURE_HOLDER_H
 #define TEXTURE_HOLDER_H

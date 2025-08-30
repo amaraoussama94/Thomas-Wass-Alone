@@ -1,3 +1,10 @@
+/**
+ * @file PlayableCharacter.hpp
+ * @brief Declaration of the PlayableCharacter class, a base class for all playable characters
+ * @date 2025-06-15
+ * @version 1.0
+ * @author Oussama amara
+ */
 #pragma once
 #include <SFML/Graphics.hpp>
 

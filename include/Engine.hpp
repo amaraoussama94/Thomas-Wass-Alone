@@ -1,3 +1,10 @@
+/**
+ * @file Engine.hpp
+ * @brief Declaration of the Engine class, the core of the game
+ * @date 2025-06-15
+ * @version 1.0
+ * @author Oussama amara
+ */
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "TextureHolder.hpp"

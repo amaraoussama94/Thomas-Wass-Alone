@@ -1,3 +1,10 @@
+/**
+ * @file logger.hpp
+ * @brief Simple logging utility for debugging purposes
+ *  @date 2025-06-15
+ * @version 1.0
+ * @author Oussama amara
+ */
 #pragma once
 #include <iostream>
 #include <fstream>

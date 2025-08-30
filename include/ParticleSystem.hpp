@@ -1,3 +1,10 @@
+/**
+ * @file ParticleSystem.hpp
+ * @brief Declaration of the ParticleSystem class for managing particle effects
+ * @date 2025-06-15
+ * @version 1.0
+ *  @author Oussama amara
+ */
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <math.h>
