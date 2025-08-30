@@ -1,3 +1,10 @@
+/**
+ * @file Update.cpp
+ * @brief Implementation of the update function for the game engine
+ * @date 2025-08-15
+ * @version 1.0
+ * @author Oussama amara
+ */
 #include "Engine.hpp"
 #include <SFML/Graphics.hpp>
 #include <sstream>

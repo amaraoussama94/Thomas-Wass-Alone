@@ -1,3 +1,10 @@
+/**
+ * @file Thomas.cpp
+ * @brief Implementation of the Thomas character class
+ * @date 2025-08-15
+ * @version 1.0
+ * @author Oussama amara
+ */
 #include "Thomas.hpp"
 #include "TextureHolder.hpp"
 

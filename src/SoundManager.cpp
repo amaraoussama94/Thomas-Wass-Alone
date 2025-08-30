@@ -1,4 +1,11 @@
- #include "SoundManager.hpp"
+/**
+ * @file SoundManager.cpp
+ * @brief Implementation of the SoundManager class for handling game sounds
+ * @date 2025-08-15
+ * @version 1.0
+ * @author Oussama amara
+ */
+#include "SoundManager.hpp"
 #include <SFML/Audio.hpp>
 using namespace sf;
 SoundManager::SoundManager()

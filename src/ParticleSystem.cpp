@@ -1,3 +1,10 @@
+/**
+ * @file ParticleSystem.cpp
+ * @brief Implementation of the ParticleSystem class for managing particle effects.
+ * @version 1.0
+ * @date 2024-08-15
+ * @author Oussama Amara
+ */
 #include "ParticleSystem.hpp"
 
 void ParticleSystem::init(int numParticles)

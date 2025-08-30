@@ -1,3 +1,10 @@
+/**
+ * @file TextureHolder.cpp
+ * @brief Implementation of the TextureHolder class for managing textures
+ * @date 2025-08-15
+ * @version 1.0
+ * @author Oussama amara
+ */
 #include "TextureHolder.hpp"
 #include <assert.h>
 

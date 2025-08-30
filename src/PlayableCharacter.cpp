@@ -1,3 +1,10 @@
+/**
+ * @file PlayableCharacter.cpp
+ * @brief Implementation of the PlayableCharacter class for managing player characters.
+ * @version 1.0
+ * @date 2024-08-15
+ * @author Oussama Amara
+ */
 #include "PlayableCharacter.hpp"
 
 void PlayableCharacter::spawn(Vector2f startPosition, float gravity)

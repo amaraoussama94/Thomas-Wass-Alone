@@ -1,3 +1,10 @@
+/**
+ * @file HUD.cpp
+ * @brief Implementation of the HUD (Heads-Up Display) class for displaying game information.
+ * @version 1.0
+ * @date 2024-08-15
+ * @author Oussama Amara
+ */
 #include "HUD.hpp"
 Hud::Hud()
 {

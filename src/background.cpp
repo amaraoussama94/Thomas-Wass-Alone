@@ -1,3 +1,10 @@
+/**
+ * @file background.cpp
+ * @brief Implementation of the Background class for rendering the game background.
+ * @version 1.0
+ * @date 2024-08-15
+ * @author Oussama Amara
+ */
 #include "background.hpp"
 
 Background::Background()

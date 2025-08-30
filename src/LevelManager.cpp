@@ -1,3 +1,10 @@
+/**
+ * @file LevelManager.cpp
+ * @brief Implementation of the LevelManager class for handling game levels.
+ * @version 1.0
+ * @date 2024-08-15
+ * @author Oussama Amara
+ */
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "TextureHolder.hpp"

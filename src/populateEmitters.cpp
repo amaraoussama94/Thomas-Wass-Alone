@@ -1,3 +1,10 @@
+/**
+ * @file populateEmitters.cpp
+ * @brief Function to populate sound emitter locations
+ * @date 2025-08-15
+ * @version 1.0
+ * @author Oussama amara
+ */
 #include "Engine.hpp"
 using namespace sf;
 using namespace std;

@@ -1,3 +1,10 @@
+/**
+ * @file Draw.cpp
+ * @brief Implementation of the draw function to render game elements on the screen.
+ * 	* @version 1.0
+ * @date 2024-08-15
+ * @author Oussama Amara
+ */
 #include "Engine.hpp"
 
 void Engine::draw()

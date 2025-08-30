@@ -1,3 +1,10 @@
+/**
+ * @file DetectCollisions.cpp
+ * @brief Implementation of collision detection between the playable character and the game environment.	
+ * @version 1.0
+ * @date 2024-08-15
+ * @author Oussama Amara
+ */
 #include "Engine.hpp"
 
 bool Engine::detectCollisions(PlayableCharacter& character)

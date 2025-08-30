@@ -1,3 +1,10 @@
+/**
+ * @file Engine.cpp
+ * @brief Implementation of the main game engine for "Thomas Was Alone".
+ * @version 1.0
+ * @date 2024-08-15
+ * @author Oussama Amara
+ */
 #include "Engine.hpp"
 
 

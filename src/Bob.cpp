@@ -1,3 +1,10 @@
+/**
+ * @file Bob.cpp
+ * @brief Implementation of the Bob class for player character control.
+ * @version 1.0
+ * @date 2024-08-15
+ * @author Oussama Amara
+ */
 #include "Bob.hpp"
 #include "TextureHolder.hpp"
 
